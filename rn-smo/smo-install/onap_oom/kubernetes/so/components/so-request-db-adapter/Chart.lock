@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: soHelpers
+  repository: file://../soHelpers
+  version: 13.0.1
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:2e554990b2a52621ef94a2eafbdcc68e05b03b8defb20fb1dc618a1269aeb8e5
+generated: "2025-11-18T12:29:00.467505716+05:30"

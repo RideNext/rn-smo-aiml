@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: multicloud-fcaps
+  repository: file://components/multicloud-fcaps
+  version: 13.0.0
+- name: multicloud-k8s
+  repository: file://components/multicloud-k8s
+  version: 13.1.3
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:67757ea88db820b4997479647adce1f127f5d90e9fd30e38b109b50d97088727
+generated: "2025-11-18T11:53:38.714911971+05:30"

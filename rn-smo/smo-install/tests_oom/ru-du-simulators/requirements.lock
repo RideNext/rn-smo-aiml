@@ -1,0 +1,15 @@
+dependencies:
+- name: topology-server
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: ru-simulator
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: du-simulator
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: du-simulator-pynts
+  repository: http://localhost:18080
+  version: 1.0.0
+digest: sha256:645cf2a8acd310688dc6b1b0c19bda8a640c07ce92b3f9e37a829476fac73bed
+generated: "2025-11-18T12:50:59.478230887+05:30"

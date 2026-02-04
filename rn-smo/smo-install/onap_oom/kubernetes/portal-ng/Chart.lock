@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: portal-ng-bff
+  repository: http://localhost:18080
+  version: 13.1.0
+- name: portal-ng-preferences
+  repository: http://localhost:18080
+  version: 14.1.0
+- name: portal-ng-history
+  repository: http://localhost:18080
+  version: 14.1.0
+- name: portal-ng-ui
+  repository: http://localhost:18080
+  version: 13.0.1
+digest: sha256:56f05acdcd53df55eaedaba27cb9c8644679cb601bb5fefdbbcd4c7c2ec4d6a9
+generated: "2025-11-18T12:09:10.664874021+05:30"

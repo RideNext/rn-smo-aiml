@@ -1,0 +1,15 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: onap-keycloak-config-cli
+  repository: file://components/keycloak-config-cli
+  version: 6.2.1
+- name: onap-oauth2-proxy
+  repository: file://components/oauth2-proxy
+  version: 7.8.0
+digest: sha256:204aaf524afe4ccfa6f4de670e86cf0dd07411da2fe01d25b3fd2afb5b443563
+generated: "2025-11-18T11:36:24.123880214+05:30"

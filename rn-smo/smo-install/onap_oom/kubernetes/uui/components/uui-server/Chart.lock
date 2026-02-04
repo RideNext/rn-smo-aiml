@@ -1,0 +1,15 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: postgres
+  repository: http://localhost:18080
+  version: 13.1.0
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:95b9346778b6879436c4d9bacf63cfed48251e1caa025e8f31377691441bd5ea
+generated: "2025-11-18T12:35:43.080868898+05:30"

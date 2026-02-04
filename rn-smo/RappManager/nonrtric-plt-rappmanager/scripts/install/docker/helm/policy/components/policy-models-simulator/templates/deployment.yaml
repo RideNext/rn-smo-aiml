@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "policy-models-simulator.fullname" . }}
+  labels:
+{{ include "policy-models-simulator.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "policy-models-simulator.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "policy-models-simulator.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "policy-models-simulator.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.global.repository }}/{{ .Values.global.image.simulator }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          command: ["/opt/app/policy/simulators/bin/simulators.sh"]
+          args: ["/opt/app/policy/simulators/etc/mounted/simParameters.json"]
+          ports:
+          - containerPort: {{ .Values.service.internalPort }}
+          - containerPort: {{ .Values.service.simulators.aai.internalPort }}
+          - containerPort: {{ .Values.service.simulators.grpc.internalPort }}
+          - containerPort: {{ .Values.service.simulators.sdnc.internalPort }}
+          - containerPort: {{ .Values.service.simulators.so.internalPort }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.service.internalPort }}
+            initialDelaySeconds: {{ .Values.liveness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.liveness.periodSeconds }}
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.service.internalPort }}
+            initialDelaySeconds: {{ .Values.readiness.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readiness.periodSeconds }}
+          volumeMounts:
+            - mountPath: /opt/app/policy/simulators/etc/mounted/
+              name: simconfig
+              readOnly: true
+            - mountPath: /opt/app/policy/simulators/etc/mounted/cdsresponse/
+              name: cdsconfig
+              readOnly: true
+            - mountPath: /opt/app/policy/simulators/etc/mounted/aairesponse
+              name: aaiconfig
+              readOnly: true
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      volumes:
+        - name: simconfig
+          configMap:
+            name: {{ include "policy-models-simulator.fullname" . }}-configmap
+            defaultMode: 0755
+        - name: cdsconfig
+          configMap:
+            name: {{ include "policy-models-simulator.fullname" . }}-cds-configmap
+            defaultMode: 0755
+        - name: aaiconfig
+          configMap:
+            name: {{ include "policy-models-simulator.fullname" . }}-aai-configmap
+            defaultMode: 0755

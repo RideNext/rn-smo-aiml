@@ -1,0 +1,18 @@
+dependencies:
+- name: smo-common
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 15.5.8
+- name: topology-exposure-inventory
+  repository: file://charts/topology-exposure-inventory
+  version: 1.0.0
+- name: topology-exposure-inventory
+  repository: file://charts/topology-exposure-inventory
+  version: 1.0.0
+- name: ncmp-to-teiv-adapter
+  repository: file://charts/ncmp-to-teiv-adapter
+  version: 1.0.0
+digest: sha256:00051b5c23d8ff78411e524e6df2db64703eebd1aa54fcfe608a37ddbd4186e5
+generated: "2025-11-18T12:49:19.746883498+05:30"

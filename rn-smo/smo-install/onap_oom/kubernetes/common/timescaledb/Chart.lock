@@ -1,0 +1,12 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+digest: sha256:5c015cfa3dd1a7c163f92f2bce66c3dbaaffbded2173451b673fe1727c6c36f4
+generated: "2025-11-18T11:27:29.543814312+05:30"

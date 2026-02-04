@@ -1,0 +1,97 @@
+image:
+  repository: localhost:5000/sdnc-web
+  pullPolicy: Always
+  tag: "2.0"
+
+nameOverride: ""
+fullnameOverride: "sdnc-web"
+
+podAnnotations: {}
+
+service:
+  type: NodePort
+  port: 8453
+  nodePort: 31453
+  httpsPort: 8443
+  httpsNodePort: 31443
+
+config:
+  enableOauth: false
+  webProtocol: HTTPS
+  sdnrHost: "sdnr.ridenext-nonrt.svc.cluster.local"
+  sdnrProtocol: http
+  sdnrPort: 8181
+  sdnrWsPort: 8182
+  sslCertDir: /opt/app/osaaf/local/certs
+  sslCertificate: cert.pem
+  sslCertificateKey: key.pem
+  emsTimeZone: "Asia/Kolkata"
+  arraySize: "10"
+  adminUsername: "admin"
+  waitTime: "15"
+  nmsKafkaIp: "kafka"
+  nmsKafkaPort: "9092"
+
+persistence:
+  enabled: true
+  softwareVersionDetails:
+    mountPath: /app/nodeServer/software-version-details.json
+    subPath: software-version-details.json
+  certs:
+    mountPath: /opt/app/osaaf/local/certs
+  pnfFiles:
+    mountPath: /app/nodeServer/pnffiles/
+    size: 1Gi
+  dockerStats:
+    mountPath: /app/nodeServer/dockerStats.sh
+    subPath: dockerStats.sh
+
+volumes:
+  configMap:
+    enabled: true
+  certificates:
+    enabled: true  # Enable certificates for HTTPS
+  docker:
+    enabled: false  # Disable Docker socket access for security
+    socket: /var/run/docker.sock
+    binary: /usr/bin/docker
+
+securityContext:
+  runAsNonRoot: false
+  runAsUser: 0
+  allowPrivilegeEscalation: true
+  capabilities:
+    add:
+      - CHOWN
+      - DAC_OVERRIDE
+
+podSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  fsGroup: 2000
+
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 0.1
+  requests:
+    memory: 256Mi
+    cpu: 0.05
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Nginx configuration for dynamic service routing
+nginx:
+  enabled: true
+  services:
+    sdnr:
+      port: 8181
+      websocketPort: 8182
+    persistence:
+      port: 9200
+    identity:
+      port: 8080
+    nbi:
+      port: 8080

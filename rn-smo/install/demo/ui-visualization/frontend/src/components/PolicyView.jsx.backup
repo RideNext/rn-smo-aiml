@@ -1,0 +1,526 @@
+import React, { useState, useEffect } from 'react';
+import { FileText, RefreshCw, Plus, Trash2, X, Server } from 'lucide-react';
+
+const PolicyView = () => {
+  const [activeTab, setActiveTab] = useState('rics');
+  const [rics, setRics] = useState([]);
+  const [policyTypes, setPolicyTypes] = useState([]);
+  const [policies, setPolicies] = useState([]);
+  const [selectedPolicyType, setSelectedPolicyType] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newPolicy, setNewPolicy] = useState({ policyId: '', policyTypeId: '', ric: '', service: '', policyData: '{}' });
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const [ricsRes, typesRes, policiesRes] = await Promise.all([
+        fetch('/api/policy/rics'),
+        fetch('/api/policy/types'),
+        fetch('/api/policy/policies')
+      ]);
+
+      if (ricsRes.ok) setRics(await ricsRes.json());
+      if (typesRes.ok) setPolicyTypes(await typesRes.json());
+      if (policiesRes.ok) setPolicies(await policiesRes.json());
+    } catch (err) {
+      console.error('Error fetching policy data:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createPolicy = async () => {
+    try {
+      const policyData = JSON.parse(newPolicy.policyData);
+      const response = await fetch('/api/policy/policies', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...newPolicy, policyData })
+      });
+      if (response.ok) {
+        setShowCreateModal(false);
+        setNewPolicy({ policyId: '', policyTypeId: '', ric: '', service: '', policyData: '{}' });
+        fetchData();
+      } else {
+        alert('Failed to create policy');
+      }
+    } catch (err) {
+      alert('Invalid JSON in Policy Data: ' + err.message);
+    }
+  };
+
+  const deletePolicy = async (policyId) => {
+    if (confirm('Delete policy ' + policyId + '?')) {
+      try {
+        const response = await fetch(`/api/policy/policies/${policyId}`, { method: 'DELETE' });
+        if (response.ok) fetchData();
+      } catch (err) {
+        console.error('Error deleting policy:', err);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (loading && rics.length === 0) {
+    return (
+      <div className="glass-card" style={{ padding: '3rem', textAlign: 'center' }}>
+        <RefreshCw size={48} style={{ color: 'var(--accent-blue)', animation: 'spin 1s linear infinite' }} />
+        <div className="card-title" style={{ marginTop: '1rem' }}>Loading Policy Data...</div>
+      </div>
+    );
+  }
+
+  const tabStyle = (isActive) => ({
+    padding: '0.75rem 1.5rem',
+    background: isActive ? 'rgba(59, 130, 246, 0.2)' : 'transparent',
+    border: 'none',
+    borderRadius: '0.5rem 0.5rem 0 0',
+    color: isActive ? 'var(--accent-blue)' : 'var(--text-secondary)',
+    cursor: 'pointer',
+    fontSize: '0.95rem',
+    fontWeight: isActive ? '600' : '500',
+    transition: 'all 0.3s ease',
+    position: 'relative'
+  });
+
+  return (
+    <div className="glass-card" style={{ padding: '0', overflow: 'hidden' }}>
+      <div style={{
+        background: 'rgba(15, 23, 42, 0.6)',
+        borderBottom: '1px solid rgba(148, 163, 184, 0.1)',
+        padding: '1rem 2rem 0 2rem'
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button type="button" onClick={() => setActiveTab('rics')} style={tabStyle(activeTab === 'rics')}>
+              RIC Details
+            </button>
+            <button type="button" onClick={() => setActiveTab('types')} style={tabStyle(activeTab === 'types')}>
+              Policy Types
+            </button>
+            <button type="button" onClick={() => setActiveTab('policies')} style={tabStyle(activeTab === 'policies')}>
+              Policies
+            </button>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', paddingBottom: '0.5rem' }}>
+            {activeTab === 'policies' && (
+              <button type="button" onClick={() => setShowCreateModal(true)} style={{ padding: '0.5rem 1rem', background: 'var(--accent-blue)', border: 'none', borderRadius: '0.5rem', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.875rem', fontWeight: 600 }}>
+                <Plus size={16} /> Create
+              </button>
+            )}
+            <button type="button" onClick={fetchData} style={{ background: 'rgba(59, 130, 246, 0.2)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '0.5rem', padding: '0.5rem', cursor: 'pointer', color: 'var(--accent-blue)', display: 'flex', alignItems: 'center' }}>
+              <RefreshCw size={20} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div style={{ padding: '2rem' }}>
+        {activeTab === 'rics' && (
+          <div>
+            <div className="card-title" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <Server size={24} style={{ color: 'var(--accent-blue)' }} />
+              Near-RT RICs ({rics.length})
+            </div>
+            {rics.length === 0 ? (
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>No RICs registered</p>
+            ) : (
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {rics.map((ric) => (
+                  <div key={ric.ric_id} className="glass-card" style={{ padding: '1.5rem', background: 'rgba(255, 255, 255, 0.03)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                      <div style={{ fontWeight: '600', fontSize: '1.1rem', color: 'var(--accent-blue)' }}>
+                        {ric.ric_id}
+                      </div>
+                      <div className={`status-badge ${ric.state === 'AVAILABLE' ? 'green' : 'red'}`} style={{ fontSize: '0.75rem' }}>
+                        {ric.state}
+                      </div>
+                    </div>
+                    {ric.managed_element_ids && ric.managed_element_ids.length > 0 && (
+                      <div style={{ marginBottom: '0.75rem' }}>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
+                          Managed Elements:
+                        </div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                          {ric.managed_element_ids.join(', ')}
+                        </div>
+                      </div>
+                    )}
+                    {ric.policytype_ids && ric.policytype_ids.length > 0 && (
+                      <div>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
+                          Policy Types:
+                        </div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                          {ric.policytype_ids.join(', ')}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'types' && (
+          <div>
+            <div className="card-title" style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <FileText size={24} style={{ color: 'var(--accent-blue)' }} />
+              Policy Types ({policyTypes.length})
+            </div>
+            {policyTypes.length === 0 ? (
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>No policy types available</p>
+            ) : (
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {policyTypes.map((type) => (
+                  <div key={type.policytype_id} className="glass-card" style={{ padding: '1.5rem', background: 'rgba(255, 255, 255, 0.03)', cursor: 'pointer' }} onClick={() => setSelectedPolicyType(selectedPolicyType?.policytype_id === type.policytype_id ? null : type)}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ fontWeight: '600', color: 'var(--accent-blue)', fontSize: '1.1rem' }}>
+                        Policy Type: {type.policytype_id}
+                      </div>
+                      <div style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+                        {selectedPolicyType?.policytype_id === type.policytype_id ? '▼' : '▶'}
+                      </div>
+                    </div>
+                    {selectedPolicyType?.policytype_id === type.policytype_id && type.policy_schema && (
+                      <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-primary)', marginBottom: '0.5rem' }}>
+                          Policy Schema:
+                        </div>
+                        <pre style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'rgba(0,0,0,0.2)', padding: '0.75rem', borderRadius: '4px', overflow: 'auto', maxHeight: '300px' }}>
+                          {JSON.stringify(type.policy_schema, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'policies' && (
+          <div>
+            <div className="card-title" style={{ marginBottom: '1rem' }}>Policies ({policies.length})</div>
+            {policies.length === 0 ? (
+              <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '2rem' }}>No policies configured</p>
+            ) : (
+              <div style={{ display: 'grid', gap: '1rem' }}>
+                {policies.map((policy) => (
+                  <div key={policy.policy_id} className="glass-card" style={{ padding: '1.5rem', background: 'rgba(255, 255, 255, 0.03)' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                      <div style={{ fontWeight: '600', fontSize: '1.1rem', color: 'var(--accent-purple)' }}>
+                        {policy.policy_id}
+                      </div>
+                      <button type="button" onClick={() => deletePolicy(policy.policy_id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--accent-red)' }}>
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                    {policy.policytype_id && (
+                      <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                        <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Type: </span>
+                        <span style={{ color: 'var(--text-secondary)' }}>{policy.policytype_id}</span>
+                      </div>
+                    )}
+                    {policy.ric_id && (
+                      <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                        <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>RIC: </span>
+                        <span style={{ color: 'var(--text-secondary)' }}>{policy.ric_id}</span>
+                      </div>
+                    )}
+                    {policy.service_id && (
+                      <div style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                        <span style={{ fontWeight: '500', color: 'var(--text-primary)' }}>Service: </span>
+                        <span style={{ color: 'var(--text-secondary)' }}>{policy.service_id}</span>
+                      </div>
+                    )}
+                    {policy.policy_data && (
+                      <div style={{ marginTop: '0.75rem' }}>
+                        <div style={{ fontSize: '0.875rem', fontWeight: '500', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
+                          Policy Data:
+                        </div>
+                        <pre style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', background: 'rgba(0,0,0,0.2)', padding: '0.5rem', borderRadius: '4px', overflow: 'auto', maxHeight: '150px' }}>
+                          {JSON.stringify(policy.policy_data, null, 2)}
+                        </pre>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {showCreateModal && (
+        left: 0,
+      right: 0,
+      bottom: 0,
+      background: 'rgba(0, 0, 0, 0.7)',
+      backdropFilter: 'blur(4px)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000,
+      padding: '1rem'
+        }}>
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(59, 130, 246, 0.3)',
+        borderRadius: '1rem',
+        padding: '2rem',
+        maxWidth: '600px',
+        width: '100%',
+        maxHeight: '90vh',
+        overflow: 'auto',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(59, 130, 246, 0.2)'
+      }}>
+        <div style={{
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          marginBottom: '1.5rem',
+          color: 'var(--accent-blue)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.75rem'
+        }}>
+          <Plus size={24} />
+          Create New Policy
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Policy ID Section */}
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              marginBottom: '0.5rem',
+              color: 'var(--text-primary)'
+            }}>
+              Policy ID *
+            </label>
+            <input
+              type="text"
+              value={newPolicy.policy_id}
+              onChange={(e) => setNewPolicy({ ...newPolicy, policy_id: e.target.value })}
+              placeholder="e.g., energy-policy-001"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                background: 'rgba(15, 23, 42, 0.6)',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                borderRadius: '0.5rem',
+                color: 'var(--text-primary)',
+                fontSize: '0.95rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--accent-blue)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)';
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+
+          {/* RIC ID Section */}
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              marginBottom: '0.5rem',
+              color: 'var(--text-primary)'
+            }}>
+              RIC ID *
+            </label>
+            <input
+              type="text"
+              value={newPolicy.ric_id}
+              onChange={(e) => setNewPolicy({ ...newPolicy, ric_id: e.target.value })}
+              placeholder="e.g., ric1"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                background: 'rgba(15, 23, 42, 0.6)',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                borderRadius: '0.5rem',
+                color: 'var(--text-primary)',
+                fontSize: '0.95rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--accent-blue)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)';
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+
+          {/* Service ID Section */}
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              marginBottom: '0.5rem',
+              color: 'var(--text-primary)'
+            }}>
+              Service ID
+            </label>
+            <input
+              type="text"
+              value={newPolicy.service_id}
+              onChange={(e) => setNewPolicy({ ...newPolicy, service_id: e.target.value })}
+              placeholder="e.g., energy-service"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                background: 'rgba(15, 23, 42, 0.6)',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                borderRadius: '0.5rem',
+                color: 'var(--text-primary)',
+                fontSize: '0.95rem',
+                outline: 'none',
+                transition: 'all 0.3s ease'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--accent-blue)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)';
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+
+          {/* Policy Data Section */}
+          <div>
+            <label style={{
+              display: 'block',
+              fontSize: '0.875rem',
+              fontWeight: '600',
+              marginBottom: '0.5rem',
+              color: 'var(--text-primary)'
+            }}>
+              Policy Data (JSON) *
+            </label>
+            <textarea
+              value={newPolicy.policy_data}
+              onChange={(e) => setNewPolicy({ ...newPolicy, policy_data: e.target.value })}
+              placeholder='{"scope": {"cell_id": "cell-001"}, "qosObjectives": {"targetValue": 50}}'
+              rows={6}
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                background: 'rgba(15, 23, 42, 0.6)',
+                border: '1px solid rgba(148, 163, 184, 0.3)',
+                borderRadius: '0.5rem',
+                color: 'var(--text-primary)',
+                fontSize: '0.875rem',
+                fontFamily: 'monospace',
+                outline: 'none',
+                transition: 'all 0.3s ease',
+                resize: 'vertical'
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--accent-blue)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.1)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'rgba(148, 163, 184, 0.3)';
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+              Enter valid JSON format for policy configuration
+            </div>
+          </div>
+        </div>
+
+        {/* Action Buttons */}
+        <div style={{
+          display: 'flex',
+          gap: '0.75rem',
+          marginTop: '2rem',
+          justifyContent: 'flex-end'
+        }}>
+          <button
+            onClick={() => {
+              setShowCreateModal(false);
+              setNewPolicy({ policy_id: '', ric_id: '', service_id: '', policy_data: '' });
+            }}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'rgba(148, 163, 184, 0.15)',
+              border: '1px solid rgba(148, 163, 184, 0.3)',
+              borderRadius: '0.5rem',
+              color: 'var(--text-secondary)',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(148, 163, 184, 0.25)';
+              e.target.style.transform = 'translateY(-2px)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(148, 163, 184, 0.15)';
+              e.target.style.transform = 'translateY(0)';
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleCreatePolicy}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'linear-gradient(135deg, var(--accent-blue), var(--accent-cyan))',
+              border: 'none',
+              borderRadius: '0.5rem',
+              color: 'white',
+              fontSize: '0.95rem',
+              fontWeight: '600',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'translateY(-2px)';
+              e.target.style.boxShadow = '0 6px 20px rgba(59, 130, 246, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'translateY(0)';
+              e.target.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+            }}
+          >
+            Create Policy
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+    </div >
+  );
+};
+
+export default PolicyView;

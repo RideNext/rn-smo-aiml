@@ -1,0 +1,70 @@
+replicaCount: 1
+
+image:
+  repository: localhost:5000/rapp-manager-ui
+  pullPolicy: Always
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: false
+  annotations: {}
+  name: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ui:
+  enabled: true
+  service:
+    type: NodePort
+    port: 8080
+    nodePort: 30080
+
+ingress:
+  enabled: false
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+persistence:
+  enabled: true
+  storageClass: "nfs-client"
+  accessMode: ReadWriteOnce
+  size: 2Gi
+  mountPath: /opt/app/rappmanager/csar
+
+env:
+  - name: RAPPMANAGER_ACM_BASEURL
+    value: "http://policy-clamp-runtime-acm.onap:6969/onap/policy/clamp/acm/v2/"
+  - name: RAPPMANAGER_SME_BASEURL
+    value: "http://capifcore:8090"
+  - name: RAPPMANAGER_DME_BASEURL
+    value: "http://informationservice:9082"
+  - name: RAPPMANAGER_CSARLOCATION
+    value: "/opt/app/rappmanager/csar"
+  - name: SPRING_PROFILES_ACTIVE
+    value: "default"
+
+livenessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 60
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /actuator/health
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10

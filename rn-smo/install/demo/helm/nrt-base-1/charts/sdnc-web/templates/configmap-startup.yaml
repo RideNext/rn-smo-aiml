@@ -1,0 +1,70 @@
+{{- if .Values.volumes.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sdnc-web.fullname" . }}-startup
+  labels:
+    {{- include "sdnc-web.labels" . | nindent 4 }}
+data:
+  startup.sh: |
+    #!/bin/bash
+    set -e
+
+    echo "Starting SDNC Web with custom startup script..."
+    
+    # Generate SSL certificates if HTTPS is enabled and certificates don't exist
+    if [ "$WEBPROTOCOL" = "HTTPS" ] && [ ! -f "$SSL_CERT_DIR/$SSL_CERTIFICATE" ]; then
+        echo "Generating self-signed SSL certificate..."
+        mkdir -p "$SSL_CERT_DIR"
+        
+        # Install openssl if not available
+        if ! command -v openssl &> /dev/null; then
+            echo "Installing openssl..."
+            apt-get update && apt-get install -y openssl
+        fi
+        
+        openssl req -x509 -newkey rsa:4096 \
+            -keyout "$SSL_CERT_DIR/$SSL_CERTIFICATE_KEY" \
+            -out "$SSL_CERT_DIR/$SSL_CERTIFICATE" \
+            -days 365 -nodes \
+            -subj "/C=US/ST=CA/L=San Francisco/O=ONAP/CN=sdnc-web"
+        
+        chmod 644 "$SSL_CERT_DIR"/*
+        echo "SSL certificate generated successfully"
+    elif [ "$WEBPROTOCOL" = "HTTPS" ]; then
+        echo "SSL certificate already exists"
+    fi
+    
+    # Set ownership of pnffiles directory (if running as root)
+    if [ "$(id -u)" = "0" ]; then
+        echo "Running as root, setting ownership of pnffiles directory..."
+        chown -R 1000:1000 /app/nodeServer/pnffiles/ || echo "Warning: Could not change ownership of pnffiles"
+        # Also create the directory if it doesn't exist
+        mkdir -p /app/nodeServer/pnffiles/
+    fi
+    
+    # Start the Node.js backend service on port 3005 in background
+    echo "Starting Node.js backend service on port 3005..."
+    if [ -f "/app/nodeServer/app.js" ]; then
+        cd /app/nodeServer && node app.js &
+        echo "Node.js backend started with PID: $!"
+    elif [ -f "/app/nodeServer/server.js" ]; then
+        cd /app/nodeServer && node server.js &
+        echo "Node.js backend started with PID: $!"
+    elif [ -f "/app/nodeServer/index.js" ]; then
+        cd /app/nodeServer && node index.js &
+        echo "Node.js backend started with PID: $!"
+    else
+        echo "Warning: Node.js backend file not found, checking for npm start..."
+        if [ -f "/app/nodeServer/package.json" ]; then
+            cd /app/nodeServer && npm start &
+            echo "Node.js backend started via npm with PID: $!"
+        else
+            echo "Warning: No Node.js backend configuration found"
+        fi
+    fi
+    
+    # Call the original container entry point
+    echo "Calling original container entry point..."
+    exec /opt/bitnami/scripts/nginx/entrypoint.sh /opt/bitnami/scripts/nginx/run.sh
+{{- end }}

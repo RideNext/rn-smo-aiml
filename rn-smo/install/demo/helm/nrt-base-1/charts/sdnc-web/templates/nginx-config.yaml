@@ -1,0 +1,180 @@
+{{- if .Values.nginx.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sdnc-web.fullname" . }}-nginx-config
+  labels:
+    {{- include "sdnc-web.labels" . | nindent 4 }}
+data:
+  sdnc-web.conf: |
+    # Upstream definitions for services
+    upstream identity {
+        server keycloak.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.identity.port | default "8080" }};
+    }
+    
+    server {
+        listen 8000;
+        {{- if eq .Values.config.webProtocol "HTTPS" }}
+        listen 8443 ssl;
+        ssl_certificate {{ .Values.config.sslCertDir }}/{{ .Values.config.sslCertificate }};
+        ssl_certificate_key {{ .Values.config.sslCertDir }}/{{ .Values.config.sslCertificateKey }};
+        ssl_protocols TLSv1.2 TLSv1.3;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA384;
+        ssl_prefer_server_ciphers off;
+        {{- end }}
+        server_name _;
+        root /app;
+        index index.html;
+        
+        location ~ ^/$  {
+            return 301 " /rn-ems/index.html";
+        }
+        location ~ ^/help/$  {
+            try_files /help/$args.json $uri;
+        }
+        location ~ ^/transportpce  {
+            resolver 127.0.0.11;
+            if ($request_uri ~* "/transportpce/(.*)") { 
+                return 404;
+            }
+        }
+        location ~ ^/topology/  {
+            resolver 127.0.0.11;
+            return 404;
+        }
+        location ~ ^/sitedoc/  {
+          resolver 127.0.0.11;
+          if ($request_uri ~* "/sitedoc/(.*)") {
+            return 404;
+          }
+        }
+        location ~ ^/tiles/  {
+            resolver 1.1.1.1 ipv6=off;
+            if ($request_uri ~* "/tiles/(.*)") { 
+                return 404;
+            }
+        }
+        location ~ ^/terrain/  {
+          resolver 127.0.0.11;
+          if ($request_uri ~* "/terrain/(.*)") {
+            return 404;
+          }
+        }
+        
+        # RESTCONF API endpoints - route to SDNR
+        location ~ ^/rests/ {
+            proxy_pass http://sdnr.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.sdnr.port | default "8181" }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Accept application/json;
+            proxy_set_header Content-Type application/json;
+            proxy_pass_request_headers on;
+            
+            # Handle CORS for API requests
+            if ($request_method = 'OPTIONS') {
+                add_header 'Access-Control-Allow-Origin' '*';
+                add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, DELETE, OPTIONS';
+                add_header 'Access-Control-Allow-Headers' 'DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization';
+                add_header 'Access-Control-Max-Age' 1728000;
+                add_header 'Content-Type' 'text/plain; charset=utf-8';
+                add_header 'Content-Length' 0;
+                return 204;
+            }
+        }
+        
+        # Additional SDNR API endpoints
+        location ~ ^/(restconf|apidoc)/ {
+            proxy_pass http://sdnr.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.sdnr.port | default "8181" }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /websocket {
+            proxy_pass http://sdnr.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.sdnr.websocketPort | default "8182" }}/websocket;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+        }
+
+        location /oauth {
+            proxy_pass http://sdnr.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.sdnr.port | default "8181" }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location ~ ^/(faultcurrent-v7|faultlog-v7|commentalarms|ackalarms|clearalarms|auditlog|cell_status|profilemanagement|pm_data|networkelement-connection-v7|pre_provider|rn_ems_perf_util|basic_config|system_config|cell_config|cuup_config|du_config|cucp_config|software_management|cell_status|sm_history|ru_config)/ {
+            proxy_pass http://persistence.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.persistence.port | default "9200" }};
+        }
+
+        location ~ ^/(realms|admin|auth)/ {
+            proxy_pass http://sdnr.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.sdnr.port | default "8181" }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /proxyapi/ {
+            proxy_pass  http://localhost:3005;
+        }
+
+        location /swagger-ui/ {
+            proxy_pass http://nbi.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.nbi.port | default "8080" }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /v3/api-docs/ {
+            proxy_pass http://nbi.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.nbi.port | default "8080" }}/v3/api-docs/;  # Swagger API docs path
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /nbi/v1/alarmManagement/ {
+            proxy_pass http://nbi.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.nbi.port | default "8080" }}/$request_uri;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        location /nbi/v1/getInventory/ {
+            proxy_pass http://nbi.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.nbi.port | default "8080" }}/$request_uri;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /nbi/v1/configuration/ {
+            proxy_pass http://nbi.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.nbi.port | default "8080" }}/$request_uri;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+        
+        location /  {
+            try_files $uri $uri/ @backend;
+        }
+        
+        location @backend {
+            proxy_pass http://sdnr.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.nginx.services.sdnr.port | default "8181" }};
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_pass_request_headers on;
+        }
+    }
+{{- end }}

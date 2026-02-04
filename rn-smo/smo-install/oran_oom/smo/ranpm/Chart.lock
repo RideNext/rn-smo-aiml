@@ -1,0 +1,24 @@
+dependencies:
+- name: smo-common
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: nrt-dfc
+  repository: file://charts/dfc
+  version: 0.1.0
+- name: nrt-kafka-producer-pm-json2influx
+  repository: file://charts/kafka-producer-pm-json2influx
+  version: 0.1.0
+- name: nrt-kafka-producer-pm-json2kafka
+  repository: file://charts/kafka-producer-pm-json2kafka
+  version: 0.1.0
+- name: nrt-kafka-producer-pm-xml2json
+  repository: file://charts/kafka-producer-pm-xml2json
+  version: 0.1.0
+- name: nrt-pm-log
+  repository: file://charts/nrt-pm-log
+  version: 0.1.0
+- name: nrt-pm-producer-json2kafka
+  repository: file://charts/pm-producer-json2kafka
+  version: 0.1.0
+digest: sha256:a471f0622b29f7b9e6a0358c81facc2d4ab86ac97ec91e670027cbb44c504e13
+generated: "2025-11-18T12:48:53.375532403+05:30"

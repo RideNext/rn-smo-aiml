@@ -1,0 +1,6 @@
+apiVersion: v2
+name: sdn-c
+description: SDN-C chart for ONAP
+type: application
+version: 0.1.0
+appVersion: 0.1.0

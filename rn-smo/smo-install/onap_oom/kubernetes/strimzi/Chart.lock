@@ -1,0 +1,15 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: strimzi-kafka-bridge
+  repository: file://components/strimzi-kafka-bridge
+  version: 13.0.3
+digest: sha256:89bbea3c0da74a4459a9c8a680466d7c2bd4c9dcef7d2e2990595f476e46e84a
+generated: "2025-11-18T12:32:44.626109929+05:30"

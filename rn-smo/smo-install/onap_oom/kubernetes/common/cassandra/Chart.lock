@@ -1,0 +1,12 @@
+dependencies:
+- name: common
+  repository: file://../common
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: file://../repositoryGenerator
+  version: 13.0.3
+- name: serviceAccount
+  repository: file://../serviceAccount
+  version: 13.0.2
+digest: sha256:ba944248d1008cc9d057b741176135e162743a24a5fc2f7104829f8bf3c0cd2a
+generated: "2025-11-18T11:19:27.984699745+05:30"

@@ -1,0 +1,81 @@
+#  ============LICENSE_START===============================================
+#  Copyright (C) 2025 Nordix Foundation. All rights reserved.
+#  ========================================================================
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+#  ============LICENSE_END=================================================
+
+grafana:
+  image:
+    repository: grafana/grafana
+    tag: "10.2.3"
+    pullPolicy: IfNotPresent
+  
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 31300
+  
+  # Admin credentials
+  admin:
+    username: admin
+    password: admin123
+  
+  # InfluxDB datasource configuration
+  datasources:
+    - name: InfluxDB
+      type: influxdb
+      url: http://influxdb2.ridenext-nonrt:8086
+      access: proxy
+      database: pm_data
+      user: admin
+      password: adminadmin
+      isDefault: true
+      version: 2
+      orgId: 1
+      editable: true
+      jsonData:
+        version: Flux
+        organization: est
+        defaultBucket: pm_data
+        httpMode: GET
+      secureJsonData:
+        token: ""  # Will be set during deployment
+  
+  # Resource limits
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 250m
+      memory: 256Mi
+  
+  # Persistence
+  persistence:
+    enabled: true
+    size: 2Gi
+    storageClass: ""
+  
+  # Dashboard provisioning
+  dashboards:
+    enabled: true
+    
+  # Security settings
+  security:
+    allowEmbedding: true
+    adminUser: admin
+    adminPassword: admin123
+
+# InfluxDB configuration - Required for token reference in configmap-datasources.yaml
+influxdb:
+  token: ""  # Will be set during deployment by the installation script

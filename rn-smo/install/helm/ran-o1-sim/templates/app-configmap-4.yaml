@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ntsim-odu-pm-xml
+  namespace: ran-o1-sim
+data:
+  {{- (.Files.Glob "config/pm.xml").AsConfig | nindent 2 }}

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ntsim-odu-hello-world-running-xml
+  namespace: ran-o1-sim
+data:
+  {{- (.Files.Glob "config/o-ran-sc-du-hello-world-running.xml").AsConfig | nindent 2 }}
+

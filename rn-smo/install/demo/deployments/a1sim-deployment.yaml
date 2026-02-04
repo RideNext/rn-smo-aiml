@@ -1,0 +1,139 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a1-sim-osc-0
+  namespace: ridenext-nonrt
+  labels:
+    app: a1-sim
+    version: osc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: a1-sim
+      version: osc
+      instance: "0"
+  template:
+    metadata:
+      labels:
+        app: a1-sim
+        version: osc
+        instance: "0"
+    spec:
+      containers:
+      - name: a1-sim
+        image: nexus3.o-ran-sc.org:10002/o-ran-sc/a1-simulator:2.7.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8085
+          name: http
+        - containerPort: 8185
+          name: https
+        env:
+        - name: A1_VERSION
+          value: "OSC_2.1.0"
+        - name: REMOTE_HOSTS_LOGGING
+          value: "1"
+        - name: ALLOW_HTTP
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8085
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8085
+          initialDelaySeconds: 20
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: a1-sim-osc-0
+  namespace: ridenext-nonrt
+spec:
+  selector:
+    app: a1-sim
+    version: osc
+    instance: "0"
+  ports:
+  - name: http
+    port: 8085
+    targetPort: 8085
+  - name: https
+    port: 8185
+    targetPort: 8185
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: a1-sim-osc-1
+  namespace: ridenext-nonrt
+  labels:
+    app: a1-sim
+    version: osc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: a1-sim
+      version: osc
+      instance: "1"
+  template:
+    metadata:
+      labels:
+        app: a1-sim
+        version: osc
+        instance: "1"
+    spec:
+      containers:
+      - name: a1-sim
+        image: nexus3.o-ran-sc.org:10002/o-ran-sc/a1-simulator:2.7.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8085
+          name: http
+        - containerPort: 8185
+          name: https
+        env:
+        - name: A1_VERSION
+          value: "OSC_2.1.0"
+        - name: REMOTE_HOSTS_LOGGING
+          value: "1"
+        - name: ALLOW_HTTP
+          value: "true"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8085
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8085
+          initialDelaySeconds: 20
+          periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: a1-sim-osc-1
+  namespace: ridenext-nonrt
+spec:
+  selector:
+    app: a1-sim
+    version: osc
+    instance: "1"
+  ports:
+  - name: http
+    port: 8085
+    targetPort: 8085
+  - name: https
+    port: 8185
+    targetPort: 8185
+  type: ClusterIP

@@ -1,0 +1,70 @@
+{
+    "config": {
+        "ric": [
+            {
+                "baseUrl": "http://a1-sim-osc-0.ridenext-nonrt:8085",
+                "managedElementIds": [
+                    "kista_1",
+                    "kista_2"
+                ],
+                "name": "ric1"
+            },
+            {
+                "baseUrl": "http://a1-sim-osc-1.ridenext-nonrt:8085",
+                "managedElementIds": [
+                    "kista_1",
+                    "kista_2"
+                ],
+                "name": "ric2"
+            },
+            {
+                "baseUrl": "http://a1-sim-std-0.ridenext-nonrt:8085",
+                "managedElementIds": [
+                    "kista_1",
+                    "kista_2"
+                ],
+                "name": "ric3"
+            },
+            {
+                "baseUrl": "http://a1-sim-std-1.ridenext-nonrt:8085",
+                "managedElementIds": [
+                    "kista_1",
+                    "kista_2"
+                ],
+                "name": "ric4"
+            },
+            {
+                "baseUrl": "http://a1-sim-std2-0.ridenext-nonrt:8085",
+                "managedElementIds": [
+                    "kista_1",
+                    "kista_2"
+                ],
+                "name": "ric5"
+            },
+            {
+                "baseUrl": "http://a1-sim-std2-1.ridenext-nonrt:8085",
+                "managedElementIds": [
+                    "kista_1",
+                    "kista_2"
+                ],
+                "name": "ric6"
+            }
+        ],
+        "streams_publishes": {
+            "dmaap_publisher": {
+                "dmaap_info": {
+                    "topic_url": "http://message-router.ridenext-nonrt:3904/events/A1-POLICY-AGENT-WRITE"
+                },
+                "type": "message_router"
+            }
+        },
+        "streams_subscribes": {
+            "dmaap_subscriber": {
+                "dmaap_info": {
+                    "topic_url": "http://message-router.ridenext-nonrt:3904/events/A1-POLICY-AGENT-READ/users/policy-agent?timeout=15000&limit=100"
+                },
+                "type": "message_router"
+            }
+        }
+    }
+}

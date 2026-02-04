@@ -1,0 +1,182 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: a1pms-config
+  namespace: ridenext-nonrt
+data:
+  application_configuration.json: |
+    {
+      "config": {
+        "ric": [
+          {
+            "name": "ric1",
+            "baseUrl": "http://a1-sim-osc-0.ridenext-nonrt:8085",
+            "managedElementIds": ["me1", "me2"]
+          },
+          {
+            "name": "ric2",
+            "baseUrl": "http://a1-sim-osc-1.ridenext-nonrt:8085",
+            "managedElementIds": ["me3", "me4"]
+          },
+          {
+            "name": "ric3",
+            "baseUrl": "http://a1-sim-std-0.ridenext-nonrt:8085",
+            "managedElementIds": ["me5", "me6"]
+          },
+          {
+            "name": "ric4",
+            "baseUrl": "http://a1-sim-std-1.ridenext-nonrt:8085",
+            "managedElementIds": ["me7", "me8"]
+          },
+          {
+            "name": "ric5",
+            "baseUrl": "http://a1-sim-std2-0.ridenext-nonrt:8085",
+            "managedElementIds": ["me9", "me10"]
+          },
+          {
+            "name": "ric6",
+            "baseUrl": "http://a1-sim-std2-1.ridenext-nonrt:8085",
+            "managedElementIds": ["me11", "me12"]
+          }
+        ],
+        "streams_publishes": {},
+        "streams_subscribes": {}
+      }
+    }
+  application.yaml: |
+    server:
+      port: 8433
+      http-port: 8081
+      ssl:
+        key-store-type: JKS
+        key-store-password: policy_agent
+        key-store: /opt/app/policy-management-service/etc/cert/keystore.jks
+        key-password: policy_agent
+        key-alias: policy_agent
+    otel:
+      exporter:
+        otlp:
+          traces:
+            endpoint: http://localhost:4317
+            protocol: grpc
+          headers:
+            Authorization: "Basic auth"
+      tracing:
+        sampler:
+          jaeger-remote:
+            endpoint: http://localhost:14250
+      sdk:
+        disabled: true
+        south: false
+    spring:
+      application:
+        name: policy-agent
+      profiles:
+        active: prod
+      main:
+        allow-bean-definition-overriding: true
+      aop:
+        auto: false
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: "loggers,logfile,health,info,metrics,threaddump,heapdump"
+    logging:
+      level:
+        ROOT: INFO
+        org.springframework: INFO
+        org.springframework.data: INFO
+        org.springframework.web.reactive.function.client.ExchangeFunctions: INFO
+        org.oran.a1policymanagementservice: INFO
+      file:
+        name: /var/log/policy-agent/application.log
+    app:
+      webclient:
+        trust-store-used: false
+        trust-store-password: policy_agent
+        trust-store: /opt/app/policy-management-service/etc/cert/truststore.jks
+        http:
+          proxy-host:
+          proxy-port: 0
+      vardata-directory: /var/policy-management-service
+      filepath: /opt/app/policy-management-service/config/application_configuration.json
+      s3:
+        endpointOverride:
+        accessKeyId:
+        secretAccessKey:
+        bucket:
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: policymanagementservice
+  namespace: ridenext-nonrt
+  labels:
+    app: policymanagementservice
+    app.kubernetes.io/name: policymanagementservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: policymanagementservice
+  template:
+    metadata:
+      labels:
+        app: policymanagementservice
+        app.kubernetes.io/name: policymanagementservice
+    spec:
+      containers:
+      - name: policymanagementservice
+        image: nexus3.o-ran-sc.org:10002/o-ran-sc/nonrtric-plt-a1policymanagementservice:2.8.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8081
+          name: http
+        - containerPort: 8433
+          name: https
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: /opt/app/policy-management-service/config/
+        volumeMounts:
+        - name: config
+          mountPath: /opt/app/policy-management-service/config
+        - name: certs
+          mountPath: /opt/app/policy-management-service/etc/cert
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: 8081
+          initialDelaySeconds: 20
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: 8081
+          initialDelaySeconds: 20
+          periodSeconds: 10
+      volumes:
+      - name: config
+        configMap:
+          name: a1pms-config
+      - name: certs
+        secret:
+          secretName: a1pms-certs
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: policymanagementservice
+  namespace: ridenext-nonrt
+spec:
+  selector:
+    app: policymanagementservice
+  ports:
+  - name: http
+    port: 8081
+    targetPort: 8081
+    nodePort: 31850
+  - name: https
+    port: 8433
+    targetPort: 8433
+  type: NodePort

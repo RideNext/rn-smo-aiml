@@ -1,0 +1,21 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: postgres
+  repository: http://localhost:18080
+  version: 13.1.0
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+- name: dcaegen2-services-common
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:9970f0d1ef5b4a3d4d97933356537e51be7993a37d4fc4136ea9b5c5a477023f
+generated: "2025-11-18T11:46:20.840762687+05:30"

@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-copy
+  namespace: ridenext-nonrt
+spec:
+  containers:
+  - name: helper
+    image: busybox
+    command: ["sleep", "3600"]
+    volumeMounts:
+    - mountPath: /opt/app/rappmanager/csar
+      name: csar-storage
+  volumes:
+  - name: csar-storage
+    persistentVolumeClaim:
+      claimName: rappmanager-pvc
+  restartPolicy: Never
+

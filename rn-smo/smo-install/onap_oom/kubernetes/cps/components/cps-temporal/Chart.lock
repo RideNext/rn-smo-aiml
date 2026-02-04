@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: timescaledb
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:637488b1fc7a667a4fb58bd262954306564356c7b11c8a1bd6dbbe02f0c80737
+generated: "2025-11-18T11:41:35.863998445+05:30"

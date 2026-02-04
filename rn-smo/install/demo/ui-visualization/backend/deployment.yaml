@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: visualization-backend
+  namespace: ridenext-nonrt
+  labels:
+    app: visualization-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: visualization-backend
+  template:
+    metadata:
+      labels:
+        app: visualization-backend
+    spec:
+      containers:
+      - name: backend
+        image: localhost:5000/visualization-backend:latest
+        imagePullPolicy: Always
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka-1-kafka-bootstrap.ridenext-nonrt:9092"
+        - name: KAFKA_TOPIC
+          value: "rapp-topic"
+        - name: ICS_BASE_URL
+          value: "http://informationservice.ridenext-nonrt:8083"
+        - name: POLICY_BASE_URL
+          value: "http://policymanagementservice.ridenext-nonrt:8081"
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: visualization-backend
+  namespace: ridenext-nonrt
+spec:
+  selector:
+    app: visualization-backend
+  ports:
+  - port: 8000
+    targetPort: 8000
+    nodePort: 31800
+  type: NodePort

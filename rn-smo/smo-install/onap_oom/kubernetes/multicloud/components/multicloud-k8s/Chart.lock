@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: mongodb
+  repository: http://localhost:18080
+  version: 16.5.7
+- name: etcd
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:da2a9cb795f44aa66d2a2f5fb0d6a8ffa5244ec609e8210965790519ff8a5d5b
+generated: "2025-11-18T11:52:48.044224873+05:30"

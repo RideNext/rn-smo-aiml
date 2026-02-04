@@ -1,0 +1,32 @@
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: example-pod
+spec:
+  containers:
+  - name: example-container
+    image: example-image
+    volumeMounts:
+    - mountPath: /certs
+      name: cert-vol
+    - mountPath: /tmp/certs
+      name: tmp-vol
+    - mountPath: /ne-files
+      name: ne-files-vol # This will now be an emptyDir
+    - mountPath: /template-files
+      name: template-files-vol
+  volumes:
+  - configMap:
+      defaultMode: 420
+      name: {{ .Release.Name }}-{{ .Chart.Name }}-cm
+    name: tmp-vol
+  - emptyDir: {}
+    name: cert-vol
+  - emptyDir: {} # Changed from ConfigMap to emptyDir
+    name: ne-files-vol
+  - configMap:
+      defaultMode: 420
+      name: {{ .Release.Name }}-{{ .Chart.Name }}-template-files-cm
+    name: template-files-vol
+```

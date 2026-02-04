@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-energy-rapp
+  namespace: ridenext-nonrt
+  labels:
+    app: simple-energy-rapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-energy-rapp
+  template:
+    metadata:
+      labels:
+        app: simple-energy-rapp
+    spec:
+      containers:
+      - name: energy-rapp
+        image: localhost:5000/simple-energy-rapp:latest
+        imagePullPolicy: Always  # Always pull from local registry
+        env:
+        - name: ICS_URL
+          value: "http://informationservice.ridenext-nonrt:8083"
+        - name: RAPP_ID
+          value: "energy-saving-rapp"
+        - name: RAPP_NAMESPACE
+          value: "ridenext-nonrt"
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka-1-kafka-bootstrap.ridenext-nonrt:9092"
+        - name: POLICY_MGMT_URL
+          value: "http://policymanagementservice.ridenext-nonrt:8081"
+        - name: RIC_ID
+          value: "ric1"
+        - name: LOW_UTIL_THRESHOLD
+          value: "20.0"
+        - name: HIGH_UTIL_THRESHOLD
+          value: "70.0"
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-energy-rapp
+  namespace: ridenext-nonrt
+spec:
+  selector:
+    app: simple-energy-rapp
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP

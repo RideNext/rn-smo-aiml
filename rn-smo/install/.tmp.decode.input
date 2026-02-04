@@ -1,0 +1,1 @@
+influxdb2_connection_bean=#class:com.influxdb.client.InfluxDBClientFactory#create('http://influxdb2.nonrtric:8086', '2scY9msE7Yd3tQtU0JZwGnn3Gue5uFApcNziXxLsztaZQ1eZb85W8ev-UwonteWe4p_LqdYCz59smUhTMPP_ZA==')

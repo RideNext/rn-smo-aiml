@@ -1,0 +1,86 @@
+[0;32m=========================================================================[0m
+[0;32mInstalling NonRTRIC Components for Energy Saving rApp Demo[0m
+[0;32mLog file: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/LOGS/install-nonrtric-only-Logs//install-nonrtric-only-20260122-152130.log[0m
+[0;32m=========================================================================[0m
+
+[1;33mChecking prerequisites...[0m
+[0;32m✓ Found: kubectl[0m
+[0;32m✓ Found: helm[0m
+[0;32m✓ ridenext-nonrt namespace exists[0m
+[0;32m✓ Kafka cluster found[0m
+[0;32m✓ Helm repo found[0m
+[0;32m✓ Helm override file found[0m
+[0;32m✓ Custom override file found[0m
+
+[0;32m=========================================================================[0m
+[0;32mInstalling NonRTRIC Components[0m
+[0;32m=========================================================================[0m
+[1;33mUsing mount path: /dockerdata-nfs/deployment-1769075490[0m
+[1;33mCreating mount path directory...[0m
+[0;32m✓ Mount path created[0m
+[1;33mInstalling with custom overrides to skip ONAP dependencies...[0m
+[1;33mCleaning up potential conflicting A1 simulator deployments...[0m
+[0;32m✓ NonRTRIC Helm chart installed successfully[0m
+
+[1;33mWaiting for Kong deployment to be ready...[0m
+[1;33m⚠ Kong deployment not found, skipping wait[0m
+
+[0;32m=========================================================================[0m
+[0;32mCurrent Pod Status in ridenext-nonrt namespace:[0m
+[0;32m=========================================================================[0m
+NAME                                        READY   STATUS              RESTARTS        AGE
+a1-sim-osc-0-5fdfc46c6d-2mnjq               0/1     ContainerCreating   0               1s
+a1-sim-osc-1-5947fb4cc7-9jft6               0/1     ContainerCreating   0               1s
+a1-sim-std-0-77cc859957-z69zx               0/1     ContainerCreating   0               1s
+a1-sim-std-1-6b9486789d-xqwlr               0/1     ContainerCreating   0               1s
+a1-sim-std2-0-8455bf98bd-hdvmj              0/1     ContainerCreating   0               1s
+a1-sim-std2-1-5d8598d5-s7c88                0/1     ContainerCreating   0               1s
+bundle-server-794d7bdbb8-9bs6v              1/1     Running             0               3m39s
+capifcore-5545f98d7d-xgvfw                  0/1     ContainerCreating   0               1s
+controlpanel-7c7ffd858c-9jl9d               1/1     Running             0               2m4s
+dfc-0                                       2/2     Running             0               93s
+dmaapadapterservice-0                       0/1     ContainerCreating   0               1s
+influxdb2-0                                 1/1     Running             0               3m39s
+informationservice-6bbc4b6bfb-nqqzz         1/1     Running             0               93s
+kafka-1-entity-operator-78744b5644-jjwbz    2/2     Running             0               2m47s
+kafka-1-kafka-0                             1/1     Running             0               3m12s
+kafka-1-zookeeper-0                         1/1     Running             0               3m35s
+kafka-1-zookeeper-1                         1/1     Running             0               3m35s
+kafka-1-zookeeper-2                         1/1     Running             0               3m35s
+kafka-client                                1/1     Running             0               4m44s
+kafka-producer-pm-json2influx-0             1/1     Running             0               93s
+kafka-producer-pm-json2kafka-0              1/1     Running             0               93s
+kafka-producer-pm-xml2json-0                1/1     Running             0               93s
+keycloak-6c99686646-q4999                   1/1     Running             0               4m44s
+keycloak-proxy-5b4dc664dc-xzn6s             1/1     Running             0               4m44s
+message-router-7795886747-24kfn             1/1     Running             1 (3m13s ago)   3m39s
+minio-0                                     1/1     Running             0               3m39s
+minio-client                                1/1     Running             0               3m39s
+nonrtricgateway-6df458644d-ppb2w            1/1     Running             0               2m37s
+opa-ics-6767f8789d-jm8cv                    1/1     Running             0               93s
+opa-kafka-774d5c5598-m74r8                  1/1     Running             0               3m39s
+opa-minio-794df5c66c-wtm9t                  1/1     Running             0               3m39s
+persistence-65984cccd6-kcjgk                1/1     Running             0               4m44s
+pm-producer-json2kafka-0                    1/1     Running             0               93s
+pm-rapp                                     1/1     Running             0               75s
+pmlog-0                                     2/2     Running             0               81s
+policymanagementservice-0                   0/1     Pending             0               1s
+rappmanager-5d5cb6d695-5pl6g                1/1     Running             0               65s
+redpanda-console-7c6b67699b-s4kt5           1/1     Running             1 (3m7s ago)    3m39s
+sdnc-web-ff84b5756-gtrxd                    0/1     ImagePullBackOff    0               3m39s
+sdnr-b576b9966-dbglf                        1/1     Running             0               3m39s
+servicemanager-7b447686bf-k7zk8             0/1     ContainerCreating   0               1s
+strimzi-cluster-operator-7bb5468c59-27d8h   1/1     Running             0               4m15s
+topology-5f4f5b9f7b-ck496                   0/1     ContainerCreating   0               1s
+ves-collector-57d66dc7d4-r7xcj              1/1     Running             0               3m39s
+zoo-entrance-744dbf8bf9-v5jrq               1/1     Running             0               3m39s
+
+[0;32m=========================================================================[0m
+[0;32mInstallation Completed![0m
+[0;32m=========================================================================[0m
+[1;33mNext steps:[0m
+1. Verify all pods are running: [0;32mkubectl get pods -n ridenext-nonrt[0m
+2. Check for any pods in CrashLoopBackOff or Error state
+3. Deploy your Energy Saving rApp
+
+[1;33mLog file saved to: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/LOGS/install-nonrtric-only-Logs//install-nonrtric-only-20260122-152130.log[0m

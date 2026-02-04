@@ -1,0 +1,39 @@
+{{- if .Values.volumes.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "sdnc-web.fullname" . }}-config
+  labels:
+    {{- include "sdnc-web.labels" . | nindent 4 }}
+data:
+  software-version-details.json: |-
+    {
+      "version": "1.1.0.10",
+      "components": [
+        {
+          "name": "sdnc-web",
+          "version": "1.4"
+        },
+        {
+          "name": "sdnr",
+          "version": "1.2"
+        },
+        {
+          "name": "vescollector",
+          "version": "1.2"
+        },
+        {
+          "name": "perf",
+          "version": "1.2"
+        },
+        {
+          "name": "nbi",
+          "version": "1.2"
+        },
+        {
+          "name": "dfc",
+          "version": "1.2"
+        }
+      ]
+    }
+{{- end }}

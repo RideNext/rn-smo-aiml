@@ -1,0 +1,30 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: dcae-datalake-admin-ui
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: dcae-datalake-des
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: dcae-datalake-feeder
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: dcae-hv-ves-collector
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: dcae-ms-healthcheck
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: dcae-prh
+  repository: http://localhost:18080
+  version: 13.1.1
+- name: dcae-ves-collector
+  repository: http://localhost:18080
+  version: 13.1.1
+- name: dcae-ves-openapi-manager
+  repository: file://components/dcae-ves-openapi-manager
+  version: 13.0.0
+digest: sha256:675747b07d7413064e7692dc7cfa2b41ade4c4ffc283e6de316f7fc383470be3
+generated: "2025-11-18T11:51:04.612916404+05:30"

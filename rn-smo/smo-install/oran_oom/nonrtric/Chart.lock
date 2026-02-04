@@ -1,0 +1,45 @@
+dependencies:
+- name: a1controller
+  repository: http://localhost:18080
+  version: 2.0.0
+- name: a1simulator
+  repository: http://localhost:18080
+  version: 2.1.0
+- name: dmeparticipant
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: controlpanel
+  repository: http://localhost:18080
+  version: 2.0.0
+- name: policymanagementservice
+  repository: http://localhost:18080
+  version: 2.0.0
+- name: informationservice
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: nonrtric-common
+  repository: http://localhost:18080
+  version: 2.0.0
+- name: nonrtricgateway
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: topology
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: kong
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: dmaapadapterservice
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: rappmanager
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: capifcore
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: servicemanager
+  repository: http://localhost:18080
+  version: 1.0.0
+digest: sha256:12f8e241f5fa37515e53d3984ff24ec03725178bb180bcd8732483e1d0ac79ec
+generated: "2025-11-18T12:46:40.396881081+05:30"

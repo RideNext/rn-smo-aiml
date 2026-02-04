@@ -1,0 +1,8 @@
+{
+  "logging": {
+    "level": "debug"
+  },
+  "decision_logs": {
+    "console": true
+  }
+}

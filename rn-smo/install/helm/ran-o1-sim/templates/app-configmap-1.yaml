@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ntsim-odu-config-json
+  namespace: ran-o1-sim
+data:
+  {{- (.Files.Glob "config/config.json").AsConfig | nindent 2 }}
+

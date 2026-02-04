@@ -1,0 +1,9 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+digest: sha256:9ae45de060a748b6d6383bf13bec1ff085e06c421ed7fd045963c549b4ad6747
+generated: "2025-11-18T11:54:50.919608897+05:30"

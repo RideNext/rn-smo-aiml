@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pm-data-producer
+  namespace: ridenext-nonrt
+spec:
+  template:
+    spec:
+      containers:
+      - name: producer
+        image: localhost:5000/pm-data-producer:latest
+        imagePullPolicy: Always
+        env:
+        - name: KAFKA_BOOTSTRAP
+          value: "kafka-1-kafka-bootstrap.ridenext-nonrt:9092"
+        - name: KAFKA_TOPIC
+          value: "rapp-topic"
+      restartPolicy: Never
+  backoffLimit: 0

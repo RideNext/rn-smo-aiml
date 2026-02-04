@@ -1,0 +1,12 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install kafka-python
+RUN pip install --no-cache-dir kafka-python==2.0.2
+
+# Copy producer script
+COPY pm_data_producer.py /app/
+
+# Run the producer
+CMD ["python", "-u", "pm_data_producer.py"]

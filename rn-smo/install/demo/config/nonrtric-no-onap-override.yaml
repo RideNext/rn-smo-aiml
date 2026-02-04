@@ -1,0 +1,45 @@
+nonrtric:
+  # Disable components that are already installed via RANPM
+  installInformationservice: false
+  installControlpanel: false
+  installNonrtricgateway: false
+  installRanpm: false
+  
+  # Disable components that require ONAP namespace
+  installDmeparticipant: false
+  
+  # Disable Kong (causing pre-upgrade hook issues, gateway already exists)
+  installKong: false
+  
+  # Enable components needed for Energy Saving rApp
+  installPms: true
+  installA1controller: false
+  installA1simulator: true
+  installTopology: true
+  installDmaapadapterservice: true
+  installrAppmanager: false
+  installCapifcore: true
+  installServicemanager: true
+  
+  # No secrets to copy since we don't have ONAP
+  secrets: []
+  
+  # Override storage class (smo-storage doesn't exist, use nfs-client)
+  volume1:
+    size: 2Gi
+    storageClassName: nfs-client
+  volume2:
+    size: 2Gi
+    storageClassName: nfs-client
+
+# Override storage class for policymanagementservice
+policymanagementservice:
+  persistence:
+    size: 2Gi
+    storageClassName: nfs-client
+
+# Override storage class for informationservice (if needed)
+informationservice:
+  persistence:
+    size: 2Gi
+    storageClassName: nfs-client

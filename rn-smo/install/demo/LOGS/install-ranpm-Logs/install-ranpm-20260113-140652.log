@@ -1,0 +1,582 @@
+[0;32m=========================================================================[0m
+[0;32mStarting RANPM Installation[0m
+[0;32mLog file: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/LOGS/install-ranpm-Logs//install-ranpm-20260113-140652.log[0m
+[0;32m=========================================================================[0m
+
+[1;33mChecking prerequisites...[0m
+[0;32m✓ Found: kubectl[0m
+[0;32m✓ Found: helm[0m
+[0;32m✓ Found: envsubst[0m
+[0;32m✓ Found: jq[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/install-nrt.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/install-nrt.sh...[0m
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Kubernetes control plane host: 192.168.128.104
+Host obtained from current kubectl context
+Kubernetes version : v1.32.2
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Checking requirements
+ Checking if istio is installed
+  OK
+ Checking if jq is installed
+  OK
+ Checking if envsubst is installed
+  OK
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Restarting istiod, workaround to refresh jwks cache
+deployment.apps/istiod restarted
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##### Installing chart: nrt-base-0
+NAME: nrt-base-0
+LAST DEPLOYED: Tue Jan 13 14:06:52 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+Cluster ip: 192.168.128.104
+Nodeport to keycloak proxy: 31784
+Get admin token
+Admin token: eyJhbGciOi...
+Creating realms: nonrtric-realm
+ Attempt to create realm: nonrtric-realm
+  OK, create_realms
+Attempt to create clients console-setup for realm: nonrtric-realm
+ Creating client: console-setup
+ OK, create_clients
+Attempt to generate secret for clients console-setup in realm nonrtric-realm
+  Client id for client console-setup in realm nonrtric-realm: 076bc96f-494c-4cd5-8cb0-723591fe620d
+  Creating secret
+   Client secret for client console-setup in realm nonrtric-realm: G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD
+   OK, generate_client_secrets
+
+Get admin token
+Admin token: eyJhbGciOi...
+##### Installing charts: strimzi and nrt-base-1
+"strimzi" has been added to your repositories
+Installing Strimzi Kafka operator version: 0.39.0
+NAME: strimzi-kafka-crds
+LAST DEPLOYED: Tue Jan 13 14:07:21 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+Thank you for installing strimzi-kafka-operator-0.39.0
+
+To create a Kafka cluster refer to the following documentation.
+
+https://strimzi.io/docs/operators/latest/deploying.html#deploying-cluster-operator-helm-chart-str
+Error: INSTALLATION FAILED: 2 errors occurred:
+	* services "opa-kafka" already exists
+	* deployments.apps "opa-kafka" already exists
+
+
+Waiting for influx db - there may be error messages while trying...
+error: unable to upgrade connection: container not found ("influxdb2")
+Configuring db
+User	Organization	Bucket
+admin	est		pm-bucket
+secret/influxdb-api-token patched
+Wait for kafka
+  2 sec, retrying at 7 sec                        [0K  9 sec, retrying at 14 sec                        [0K  16 sec, retrying at 21 sec                        [0K  23 sec, retrying at 28 sec                        [0K  30 sec, retrying at 35 sec                        [0K
+Creating topic: file-ready with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
+Created topic file-ready.
+Creating topic: collected-file with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
+Created topic collected-file.
+Creating topic: json-file-ready-kp with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
+Created topic json-file-ready-kp.
+Creating topic: json-file-ready-kpadp with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
+Created topic json-file-ready-kpadp.
+Creating topic: pmreports with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
+Created topic pmreports.
+
+Wait for SDNR
+
+##### Installing: chart nonrtricgateway
+NAME: nonrtricgateway
+LAST DEPLOYED: Tue Jan 13 14:09:04 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+##### Installing: chart controlpanel
+NAME: controlpanel
+LAST DEPLOYED: Tue Jan 13 14:09:27 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+##### Installing: chart ran-o1-sim
+NAME: ran-o1-sim-du
+LAST DEPLOYED: Tue Jan 13 14:09:59 2026
+NAMESPACE: ran-o1-sim
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+##### Installing chart: nrt-pm
+Updating dfc truststore
+ Adding https ca cert to dfc truststore
+Owner: EMAILADDRESS=a@example.com, OU=EST, O=EST, L=., ST=., C=SE
+Issuer: EMAILADDRESS=a@example.com, OU=EST, O=EST, L=., ST=., C=SE
+Serial number: 5ac065137477243e239f0eec2e754785cf508dee
+Valid from: Thu Jun 19 12:15:38 IST 2025 until: Wed Oct 20 12:15:38 IST 3024
+Certificate fingerprints:
+	 SHA1: 5C:74:95:4C:89:E8:46:0C:38:FC:1D:2F:70:4D:E6:7F:4B:34:7D:DD
+	 SHA256: 12:55:0E:ED:5A:01:44:2F:67:75:38:DB:F5:BC:61:EC:57:55:9B:53:87:6A:2D:44:F6:8E:CD:45:E9:3D:7A:28
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.35 Criticality=false
+AuthorityKeyIdentifier [
+KeyIdentifier [
+0000: 41 1C 22 88 BD 47 5D 05   61 59 54 5C BF 80 D6 1B  A."..G].aYT\....
+0010: B5 B1 F2 20                                        ... 
+]
+]
+
+#2: ObjectId: 2.5.29.19 Criticality=true
+BasicConstraints:[
+  CA:true
+  PathLen: no limit
+]
+
+#3: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: 41 1C 22 88 BD 47 5D 05   61 59 54 5C BF 80 D6 1B  A."..G].aYT\....
+0010: B5 B1 F2 20                                        ... 
+]
+]
+
+Trust this certificate? [no]:  Certificate was added to keystore
+Attempt to create clients kafka-producer-pm-xml2json for realm: nonrtric-realm
+ Creating client: kafka-producer-pm-xml2json
+Get admin token
+Admin token: eyJhbGciOi...
+ OK, create_clients
+Attempt to generate secret for clients kafka-producer-pm-xml2json in realm nonrtric-realm
+  Client id for client kafka-producer-pm-xml2json in realm nonrtric-realm: df24796a-dbe3-4fc0-8813-7114da00cd88
+  Creating secret
+   Client secret for client kafka-producer-pm-xml2json in realm nonrtric-realm: e9gbuTPu4yPxHgg3KA6nSay3gurC8w43
+   OK, generate_client_secrets
+Attempt to create clients kafka-producer-pm-json2kafka for realm: nonrtric-realm
+ Creating client: kafka-producer-pm-json2kafka
+ OK, create_clients
+Attempt to generate secret for clients kafka-producer-pm-json2kafka in realm nonrtric-realm
+  Client id for client kafka-producer-pm-json2kafka in realm nonrtric-realm: 186ce7c9-c9df-43e9-a93e-83a0d05d4a6e
+  Creating secret
+   Client secret for client kafka-producer-pm-json2kafka in realm nonrtric-realm: SC8rBNC0fCfMg0lUAIH9hV3W0ZFgU4Uj
+   OK, generate_client_secrets
+Attempt to create clients kafka-producer-pm-json2influx for realm: nonrtric-realm
+ Creating client: kafka-producer-pm-json2influx
+ OK, create_clients
+Attempt to generate secret for clients kafka-producer-pm-json2influx in realm nonrtric-realm
+  Client id for client kafka-producer-pm-json2influx in realm nonrtric-realm: 23ef5449-8deb-4913-9bfe-365e1e7c4edc
+  Creating secret
+   Client secret for client kafka-producer-pm-json2influx in realm nonrtric-realm: x7TeYVVCxDxvrv1lEIDc2wiPzWTWw0Ef
+   OK, generate_client_secrets
+Bucket  does not exist, creating
+Bucket pm_data created, OK
+Attempt to create clients pm-producer-json2kafka for realm: nonrtric-realm
+ Creating client: pm-producer-json2kafka
+ OK, create_clients
+Attempt to generate secret for clients pm-producer-json2kafka in realm nonrtric-realm
+  Client id for client pm-producer-json2kafka in realm nonrtric-realm: 2637d3c8-98fd-4493-935f-07b96aa4fd4e
+  Creating secret
+   Client secret for client pm-producer-json2kafka in realm nonrtric-realm: SRPSYDD82VWyNKYlo3kwOHXSRUL7rlyv
+   OK, generate_client_secrets
+Attempt to create clients dfc for realm: nonrtric-realm
+ Creating client: dfc
+ OK, create_clients
+Attempt to generate secret for clients dfc in realm nonrtric-realm
+  Client id for client dfc in realm nonrtric-realm: 05844d35-a0fd-41e1-9913-50596ded4260
+  Creating secret
+   Client secret for client dfc in realm nonrtric-realm: Q6ZoPdw561DxzenfHaCaXs9HpEV8122i
+   OK, generate_client_secrets
+NAME: nrt-pm
+LAST DEPLOYED: Tue Jan 13 14:10:07 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+
+######################################################################
+ranpm installed
+Wait until all pods are running before installation additional charts
+Do: 'kubectl get po -n ridenext-nonrt' and verify that all pods are in status Running
+ and all included containers are Ready
+######################################################################
+[0;32m✓ scripts/install-nrt.sh completed successfully[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/install-pm-log.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/install-pm-log.sh...[0m
+Installing pmlog
+Cluster ip: 192.168.128.104
+Nodeport to keycloak proxy: 31784
+Get admin token
+Admin token: eyJhbGciOi...
+Attempt to create clients nrt-pm-log for realm: nonrtric-realm
+ Creating client: nrt-pm-log
+ OK, create_clients
+Attempt to generate secret for clients nrt-pm-log in realm nonrtric-realm
+  Client id for client nrt-pm-log in realm nonrtric-realm: d0a5f93a-8821-4064-8d48-033c89f94179
+  Creating secret
+   Client secret for client nrt-pm-log in realm nonrtric-realm: B53CSg0OZJLAj4ya3x3JSdqMjlgRuYjx
+   OK, generate_client_secrets
+Creating bucket pm-logg-bucket in influxdb2
+Bucket  does not exist, creating
+Bucket pm-logg-bucket created, OK
+ helm install...
+NAME: nrt-pm-log
+LAST DEPLOYED: Tue Jan 13 14:10:18 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+done
+[0;32m✓ scripts/install-pm-log.sh completed successfully[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/install-pm-influx-job.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/install-pm-influx-job.sh...[0m
+Kubernetes control plane host: 192.168.128.104
++ echo 'Installation pm to influx job'
+Installation pm to influx job
++ echo ' Retriving influxdb2 access token...'
+ Retriving influxdb2 access token...
+++ get_influxdb2_token influxdb2-0 ridenext-nonrt
+++ '[' 2 -ne 2 ']'
+++ __influxdb2_access_token=
+++ '[' -z '' ']'
++++ kubectl exec -n ridenext-nonrt influxdb2-0 -- influx config ls --json
++++ jq -r .default.token
+++ export __influxdb2_access_token=sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==
+++ __influxdb2_access_token=sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==
+++ '[' 0 -ne 0 ']'
+++ '[' -z sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg== ']'
+++ echo -n sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==
+++ return 0
++ INFLUXDB2_TOKEN=sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==
++ bucket=pm-bucket
++ echo 'Creating bucket pm-bucket in influxdb2'
+Creating bucket pm-bucket in influxdb2
++ create_influxdb2_bucket influxdb2-0 ridenext-nonrt pm-bucket
+++ kubectl exec -n ridenext-nonrt influxdb2-0 -- influx bucket ls --json
+++ jq 'any(.[].name; . == "pm-bucket")'
++ RES=true
++ '[' true == true ']'
++ echo 'Bucket  exist, OK'
+Bucket  exist, OK
++ . scripts/helper-scripts/populate_keycloak.sh
+++ echo 'Cluster ip: 192.168.128.104'
+Cluster ip: 192.168.128.104
++++ kubectl get svc -n ridenext-nonrt keycloak-proxy --output 'jsonpath={.spec.ports[?(@.name=="http")].nodePort}'
+++ KC_PROXY_PORT=31784
+++ echo 'Nodeport to keycloak proxy: 31784'
+Nodeport to keycloak proxy: 31784
+++ __get_admin_token
+++ echo 'Get admin token'
+Get admin token
+++ ADMIN_TOKEN=
+++ '[' 0 -lt 20 ']'
++++ curl -s -X POST 192.168.128.104:31784/realms/master/protocol/openid-connect/token --max-time 2 -H 'Content-Type: application/x-www-form-urlencoded' -d username=admin -d password=admin -d grant_type=password -d client_id=admin-cli
++++ jq -r .access_token
+++ ADMIN_TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2ODAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiZDFjMzAyOWYtZjBiMC00YjBmLTgyOWYtZmRhYjczMmZkYTQ3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiIyMzVkMWZlMC1mMTE3LTRkM2QtYWRhNC1iODE0MThkMDBlMTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiMjM1ZDFmZTAtZjExNy00ZDNkLWFkYTQtYjgxNDE4ZDAwZTE1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.B1WOJjCY3YyPj5YNMucN5STB9qhBfvpGfPrV1PFttOxH5x9TYEOHtCz5VZ9-OKB58aw0DTOTJpD_WlWrHeFSjkgwmrRDJRKIfJVNCRurmlGNEsvAQnAlJhkyVoo1qLNHprdl02asjXhjlZkzIcbOqLeZs7Rsn98xT5yDXL0i2I8Wjatmk8vafoRN8fef0dWKBSFovWJKdIxrHojTeFD3VxhL8_yEp5Kg-z4-LpsfYyEPdRvILBFa38B3AICpZEJbnKQdpvWioj3TacVMjIJ11V8UY9gchf77V37u3xC-JthKdKH0thihnvjFwjjvr7FU6h5slxI13NtkATxDDkwAUA
+++ '[' 991 -lt 20 ']'
+++ '[' 991 -lt 20 ']'
+++ echo 'Admin token: eyJhbGciOi...'
+Admin token: eyJhbGciOi...
+++ echo eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2ODAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiZDFjMzAyOWYtZjBiMC00YjBmLTgyOWYtZmRhYjczMmZkYTQ3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiIyMzVkMWZlMC1mMTE3LTRkM2QtYWRhNC1iODE0MThkMDBlMTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiMjM1ZDFmZTAtZjExNy00ZDNkLWFkYTQtYjgxNDE4ZDAwZTE1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.B1WOJjCY3YyPj5YNMucN5STB9qhBfvpGfPrV1PFttOxH5x9TYEOHtCz5VZ9-OKB58aw0DTOTJpD_WlWrHeFSjkgwmrRDJRKIfJVNCRurmlGNEsvAQnAlJhkyVoo1qLNHprdl02asjXhjlZkzIcbOqLeZs7Rsn98xT5yDXL0i2I8Wjatmk8vafoRN8fef0dWKBSFovWJKdIxrHojTeFD3VxhL8_yEp5Kg-z4-LpsfYyEPdRvILBFa38B3AICpZEJbnKQdpvWioj3TacVMjIJ11V8UY9gchf77V37u3xC-JthKdKH0thihnvjFwjjvr7FU6h5slxI13NtkATxDDkwAUA
+++ __ADM_TOKEN_TS=1
++ cid=console-setup
+++ get_client_token nonrtric-realm console-setup
+++ __check_admin_token
+++ __diff=0
+++ '[' 0 -gt 15 ']'
+++ __realm=nonrtric-realm
+++ __client=console-setup
++++ __get_client_id nonrtric-realm console-setup
+++++ curl -s -X GET '192.168.128.104:31784/admin/realms/nonrtric-realm/clients?clientId=console-setup' -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2ODAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiZDFjMzAyOWYtZjBiMC00YjBmLTgyOWYtZmRhYjczMmZkYTQ3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiIyMzVkMWZlMC1mMTE3LTRkM2QtYWRhNC1iODE0MThkMDBlMTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiMjM1ZDFmZTAtZjExNy00ZDNkLWFkYTQtYjgxNDE4ZDAwZTE1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.B1WOJjCY3YyPj5YNMucN5STB9qhBfvpGfPrV1PFttOxH5x9TYEOHtCz5VZ9-OKB58aw0DTOTJpD_WlWrHeFSjkgwmrRDJRKIfJVNCRurmlGNEsvAQnAlJhkyVoo1qLNHprdl02asjXhjlZkzIcbOqLeZs7Rsn98xT5yDXL0i2I8Wjatmk8vafoRN8fef0dWKBSFovWJKdIxrHojTeFD3VxhL8_yEp5Kg-z4-LpsfYyEPdRvILBFa38B3AICpZEJbnKQdpvWioj3TacVMjIJ11V8UY9gchf77V37u3xC-JthKdKH0thihnvjFwjjvr7FU6h5slxI13NtkATxDDkwAUA'
++++ __client_data='[{"id":"076bc96f-494c-4cd5-8cb0-723591fe620d","clientId":"console-setup","rootUrl":"https://example.com/example/","adminUrl":"https://example.com/example/","surrogateAuthRequired":false,"enabled":true,"alwaysDisplayInConsole":false,"clientAuthenticatorType":"client-secret","secret":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD","redirectUris":[],"webOrigins":[],"notBefore":0,"bearerOnly":false,"consentRequired":false,"standardFlowEnabled":true,"implicitFlowEnabled":false,"directAccessGrantsEnabled":false,"serviceAccountsEnabled":true,"publicClient":false,"frontchannelLogout":false,"protocol":"openid-connect","attributes":{"client.secret.creation.time":"1768293439"},"authenticationFlowBindingOverrides":{},"fullScopeAllowed":true,"nodeReRegistrationTimeout":-1,"protocolMappers":[{"id":"10b88719-fb6d-4665-aa75-8a88322221d1","name":"Client Host","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientHost","id.token.claim":"true","access.token.claim":"true","claim.name":"clientHost","jsonType.label":"String"}},{"id":"21ba9206-92d7-4a33-b90a-d73681daf033","name":"Client IP Address","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientAddress","id.token.claim":"true","access.token.claim":"true","claim.name":"clientAddress","jsonType.label":"String"}},{"id":"986e9607-3ec5-43f2-9ec7-3190cd99d7d5","name":"Client ID","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientId","id.token.claim":"true","access.token.claim":"true","claim.name":"clientId","jsonType.label":"String"}}],"defaultClientScopes":["web-origins","acr","roles","profile","email"],"optionalClientScopes":["address","phone","offline_access","microprofile-jwt"],"access":{"view":true,"configure":true,"manage":true}}]'
++++ '[' 0 -ne 0 ']'
+++++ jq -r '.[0].id'
+++++ echo '[{"id":"076bc96f-494c-4cd5-8cb0-723591fe620d","clientId":"console-setup","rootUrl":"https://example.com/example/","adminUrl":"https://example.com/example/","surrogateAuthRequired":false,"enabled":true,"alwaysDisplayInConsole":false,"clientAuthenticatorType":"client-secret","secret":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD","redirectUris":[],"webOrigins":[],"notBefore":0,"bearerOnly":false,"consentRequired":false,"standardFlowEnabled":true,"implicitFlowEnabled":false,"directAccessGrantsEnabled":false,"serviceAccountsEnabled":true,"publicClient":false,"frontchannelLogout":false,"protocol":"openid-connect","attributes":{"client.secret.creation.time":"1768293439"},"authenticationFlowBindingOverrides":{},"fullScopeAllowed":true,"nodeReRegistrationTimeout":-1,"protocolMappers":[{"id":"10b88719-fb6d-4665-aa75-8a88322221d1","name":"Client' 'Host","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientHost","id.token.claim":"true","access.token.claim":"true","claim.name":"clientHost","jsonType.label":"String"}},{"id":"21ba9206-92d7-4a33-b90a-d73681daf033","name":"Client' IP 'Address","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientAddress","id.token.claim":"true","access.token.claim":"true","claim.name":"clientAddress","jsonType.label":"String"}},{"id":"986e9607-3ec5-43f2-9ec7-3190cd99d7d5","name":"Client' 'ID","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientId","id.token.claim":"true","access.token.claim":"true","claim.name":"clientId","jsonType.label":"String"}}],"defaultClientScopes":["web-origins","acr","roles","profile","email"],"optionalClientScopes":["address","phone","offline_access","microprofile-jwt"],"access":{"view":true,"configure":true,"manage":true}}]'
++++ __client_id=076bc96f-494c-4cd5-8cb0-723591fe620d
++++ echo 076bc96f-494c-4cd5-8cb0-723591fe620d
++++ return 0
+++ __client_id=076bc96f-494c-4cd5-8cb0-723591fe620d
+++ '[' 0 -ne 0 ']'
++++ curl -s -f -X GET 192.168.128.104:31784/admin/realms/nonrtric-realm/clients/076bc96f-494c-4cd5-8cb0-723591fe620d/client-secret -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2ODAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiZDFjMzAyOWYtZjBiMC00YjBmLTgyOWYtZmRhYjczMmZkYTQ3IiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiIyMzVkMWZlMC1mMTE3LTRkM2QtYWRhNC1iODE0MThkMDBlMTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiMjM1ZDFmZTAtZjExNy00ZDNkLWFkYTQtYjgxNDE4ZDAwZTE1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.B1WOJjCY3YyPj5YNMucN5STB9qhBfvpGfPrV1PFttOxH5x9TYEOHtCz5VZ9-OKB58aw0DTOTJpD_WlWrHeFSjkgwmrRDJRKIfJVNCRurmlGNEsvAQnAlJhkyVoo1qLNHprdl02asjXhjlZkzIcbOqLeZs7Rsn98xT5yDXL0i2I8Wjatmk8vafoRN8fef0dWKBSFovWJKdIxrHojTeFD3VxhL8_yEp5Kg-z4-LpsfYyEPdRvILBFa38B3AICpZEJbnKQdpvWioj3TacVMjIJ11V8UY9gchf77V37u3xC-JthKdKH0thihnvjFwjjvr7FU6h5slxI13NtkATxDDkwAUA'
+++ __client_secret='{"type":"secret","value":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD"}'
+++ '[' 0 -ne 0 ']'
++++ echo '{"type":"secret","value":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD"}'
++++ jq -r .value
+++ __client_secret=G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD
++++ curl -s -f -X POST 192.168.128.104:31784/realms/nonrtric-realm/protocol/openid-connect/token -H Content-Type:application/x-www-form-urlencoded -d client_id=console-setup -d client_secret=G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD -d grant_type=client_credentials
+++ __TMP_TOKEN='{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ","expires_in":300,"refresh_expires_in":0,"token_type":"Bearer","not-before-policy":0,"scope":"profile email"}'
+++ '[' 0 -ne 0 ']'
+++ echo '{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ","expires_in":300,"refresh_expires_in":0,"token_type":"Bearer","not-before-policy":0,"scope":"profile' 'email"}'
+++ jq -r .access_token
+++ return 0
++ TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ
++ JOB='{"info_type_id": "json-file-data-from-filestore",
+     "job_owner": "console",
+     "status_notification_uri": "http://callback.ridenext-nonrt:80/post",
+     "job_definition": {
+        "db-url":"http://influxdb2.ridenext-nonrt:8086",
+        "db-org":"est",
+        "db-bucket":"pm-bucket",
+        "db-token":"sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==",
+        "filterType":"pmdata",
+        "filter":{}
+     }}'
++ echo '{"info_type_id":' '"json-file-data-from-filestore",' '"job_owner":' '"console",' '"status_notification_uri":' '"http://callback.ridenext-nonrt:80/post",' '"job_definition":' '{' '"db-url":"http://influxdb2.ridenext-nonrt:8086",' '"db-org":"est",' '"db-bucket":"pm-bucket",' '"db-token":"sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==",' '"filterType":"pmdata",' '"filter":{}' '}}'
++ create_ics_job kp-influx-json 0 eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ
+++ kubectl get svc -n ridenext-nonrt informationservice --output 'jsonpath={.spec.ports[?(@.name=="http")].nodePort}'
++ ICS_PROXY_PORT=31823
++ echo 'NodePort to ics: 31823'
+NodePort to ics: 31823
++ JOB='{"info_type_id": "json-file-data-from-filestore", "job_owner": "console", "status_notification_uri": "http://callback.ridenext-nonrt:80/post", "job_definition": { "db-url":"http://influxdb2.ridenext-nonrt:8086", "db-org":"est", "db-bucket":"pm-bucket", "db-token":"sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==", "filterType":"pmdata", "filter":{} }}'
++ echo '{"info_type_id":' '"json-file-data-from-filestore",' '"job_owner":' '"console",' '"status_notification_uri":' '"http://callback.ridenext-nonrt:80/post",' '"job_definition":' '{' '"db-url":"http://influxdb2.ridenext-nonrt:8086",' '"db-org":"est",' '"db-bucket":"pm-bucket",' '"db-token":"sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==",' '"filterType":"pmdata",' '"filter":{}' '}}'
+{"info_type_id": "json-file-data-from-filestore", "job_owner": "console", "status_notification_uri": "http://callback.ridenext-nonrt:80/post", "job_definition": { "db-url":"http://influxdb2.ridenext-nonrt:8086", "db-org":"est", "db-bucket":"pm-bucket", "db-token":"sTRF-lQPkSaUMZR431zn5GL_4RmxeF5brVa2QfXq-01WUwnroz8tSAmACqRA_PadNJBA8W8A_pzUMgLG7XW3qg==", "filterType":"pmdata", "filter":{} }}
++ retcode=1
++ echo 'Creating job-kp-influx-json-0'
+Creating job-kp-influx-json-0
++ '[' 1 -ne 0 ']'
++ '[' -z eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ ']'
++ __bearer='Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ'
+++ curl -s -X PUT -w '%{http_code}' -H accept:application/json -H Content-Type:application/json http://192.168.128.104:31823/data-consumer/v1/info-jobs/job-kp-influx-json-0 --data-binary @.job.json -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MjAsImlhdCI6MTc2ODI5MzYyMCwianRpIjoiY2IxZjE3NzgtM2I2MS00ZGJmLTg5ZjAtOTc1YTk0NGNhNjExIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.M-wh_l-3wCoTTX26UmuT3qooq1OriZz6QBdglawohlI99zl_U1BW4s2EZ_WhcOcAMbxrm7hwQoFc6O7ehi1bz85xzNiTYPlJYL8QOboPC2X0SsnYoe2_l0nVZ6WseNjIWX1X1Umw8aRxb3ZveVpVyet-p4QmoBaXReaGxx8AFN3IehfJKdwKj76QHWyhXuvSJY5R2p5EpKYwRCHh6Hm-j-GmnHSC5Bz3Alotz_li33-Xmr2J_K3i_1inf3qp0IIEznjxe4zVNvuZenD8c7k2uWKmYEWlrNgtZpocX1yEA4Ufmy5-0A_dr1mvtYQ5WPv9_63DS1dk0U3FJH9hgAnEaQ'
++ STAT=201
++ retcode=0
++ echo 'curl return code: 0'
+curl return code: 0
++ '[' 0 -eq 0 ']'
++ status=201
++ echo 'http status code: 201'
+http status code: 201
++ '[' 201 == 200 ']'
++ '[' 201 == 201 ']'
++ echo 'Job created ok'
+Job created ok
++ sleep 1
++ '[' 0 -ne 0 ']'
++ echo done
+done
+[0;32m✓ scripts/install-pm-influx-job.sh completed successfully[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/install-pm-rapp.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/install-pm-rapp.sh...[0m
+Installing pmrapp
+Creating client in keycloak
+Creating topic: rapp-topic with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
+Created topic rapp-topic.
+Cluster ip: 192.168.128.104
+Nodeport to keycloak proxy: 31784
+Get admin token
+Admin token: eyJhbGciOi...
+Attempt to create clients pm-rapp for realm: nonrtric-realm
+ Creating client: pm-rapp
+ OK, create_clients
+Attempt to generate secret for clients pm-rapp in realm nonrtric-realm
+  Client id for client pm-rapp in realm nonrtric-realm: 2d4ccfb6-8800-44ea-99b3-5f8270fc00f2
+  Creating secret
+   Client secret for client pm-rapp in realm nonrtric-realm: JCSSe9OuboFUQ2KvzpyA7lu9DYe0GDtO
+   OK, generate_client_secrets
+ helm install...
+NAME: nrt-pm-rapp
+LAST DEPLOYED: Tue Jan 13 14:10:25 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+done
+[0;32m✓ scripts/install-pm-rapp.sh completed successfully[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/install-pm-kafka-bridge.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/install-pm-kafka-bridge.sh...[0m
++ . scripts/helper-scripts/create_topic.sh
+++ kube_get_controlplane_host
++++ kubectl config current-context
+++ __current_context=kubernetes-admin@kubernetes
+++ '[' 0 -ne 0 ']'
++++ kubectl config view -o 'jsonpath={.contexts[?(@.name=='\''kubernetes-admin@kubernetes'\'')].context.cluster}'
+++ __cluster_name=kubernetes
+++ '[' 0 -ne 0 ']'
++++ kubectl config view -o 'jsonpath={.clusters[?(@.name=='\''kubernetes'\'')].cluster.server}'
+++ __cluster_server=https://192.168.128.104:6443
+++ '[' 0 -ne 0 ']'
++++ echo https://192.168.128.104:6443
++++ awk '-F[/:]' '{print $4}'
+++ __cluster_host=192.168.128.104
+++ '[' 0 -ne 0 ']'
+++ [[ 192.168.128.104 == \1\2\7\.\0\.\0\.\1 ]]
+++ echo 192.168.128.104
+++ return 0
++ export KUBERNETESHOST=192.168.128.104
++ KUBERNETESHOST=192.168.128.104
++ '[' 0 -ne 0 ']'
++ echo 'Kubernetes control plane host: 192.168.128.104'
+Kubernetes control plane host: 192.168.128.104
++ echo 'Installation pm kafka bridge job - rapp-topic to pmreports'
+Installation pm kafka bridge job - rapp-topic to pmreports
++ echo 'Creating pmreports topic if it doesn'\''t exist'
+Creating pmreports topic if it doesn't exist
++ create_topic kafka-1-kafka-bootstrap.ridenext-nonrt:9092 pmreports 10
++ '[' 3 -lt 2 ']'
++ kafka=kafka-1-kafka-bootstrap.ridenext-nonrt:9092
++ topic=pmreports
++ partitions=10
++ '[' -z 10 ']'
++ echo 'Creating topic: pmreports with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092'
+Creating topic: pmreports with 10 partition(s) in kafka-1-kafka-bootstrap.ridenext-nonrt:9092
++ kubectl exec -it kafka-client -n ridenext-nonrt -- bash -c 'kafka-topics --create --topic pmreports  --partitions 10 --bootstrap-server kafka-1-kafka-bootstrap.ridenext-nonrt:9092'
+Error while executing topic command : Topic 'pmreports' already exists.
+[2026-01-13 08:40:30,169] ERROR org.apache.kafka.common.errors.TopicExistsException: Topic 'pmreports' already exists.
+ (kafka.admin.TopicCommand$)
+command terminated with exit code 1
++ return 1
++ . scripts/helper-scripts/populate_keycloak.sh
+++ echo 'Cluster ip: 192.168.128.104'
+Cluster ip: 192.168.128.104
++++ kubectl get svc -n ridenext-nonrt keycloak-proxy --output 'jsonpath={.spec.ports[?(@.name=="http")].nodePort}'
+++ KC_PROXY_PORT=31784
+++ echo 'Nodeport to keycloak proxy: 31784'
+Nodeport to keycloak proxy: 31784
+++ __get_admin_token
+++ echo 'Get admin token'
+Get admin token
+++ ADMIN_TOKEN=
+++ '[' 0 -lt 20 ']'
++++ curl -s -X POST 192.168.128.104:31784/realms/master/protocol/openid-connect/token --max-time 2 -H 'Content-Type: application/x-www-form-urlencoded' -d username=admin -d password=admin -d grant_type=password -d client_id=admin-cli
++++ jq -r .access_token
+++ ADMIN_TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2OTAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiYTAxYmVmMWUtZTQzYy00M2ZjLWJkYzAtMTE3YmRiNGExYWJlIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiI4OGE1MTFlZi0xZjNkLTQ4NDYtODMxMC0zNjJmOWRjYzQwOTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiODhhNTExZWYtMWYzZC00ODQ2LTgzMTAtMzYyZjlkY2M0MDk1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.TSdsM_jCKUpDk5x62lnJJr_dif9lJa4mW0xjilZ8fiiNs97eFy4ahyVr8UwSmi2ZqxK8Ka-sd9NS9kDckeIP-U1Fq9iT-7qPwuyi1DQM_VhqyjnJ50UDEkNqh9fCtaQTk1rT5nuY3VG_zl32FnZ-wEe2S4ihVsuV8WmL4ubNjaQsOV69C-8WESgxELEjyARQyhXhrrRSBvauXWqdg4DYYgVqPpcT_teVMjnMr7ttjTBflrlUVOj9ejwJEvjWmW8rQOMH-kUXWKHltsND67IEODt1ba82qajjaF0i4CvTLIXYBTugw-OBeyJ7tWD4LYHovOL6D_NFnkyk9hpsSHV0CQ
+++ '[' 991 -lt 20 ']'
+++ '[' 991 -lt 20 ']'
+++ echo 'Admin token: eyJhbGciOi...'
+Admin token: eyJhbGciOi...
+++ echo eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2OTAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiYTAxYmVmMWUtZTQzYy00M2ZjLWJkYzAtMTE3YmRiNGExYWJlIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiI4OGE1MTFlZi0xZjNkLTQ4NDYtODMxMC0zNjJmOWRjYzQwOTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiODhhNTExZWYtMWYzZC00ODQ2LTgzMTAtMzYyZjlkY2M0MDk1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.TSdsM_jCKUpDk5x62lnJJr_dif9lJa4mW0xjilZ8fiiNs97eFy4ahyVr8UwSmi2ZqxK8Ka-sd9NS9kDckeIP-U1Fq9iT-7qPwuyi1DQM_VhqyjnJ50UDEkNqh9fCtaQTk1rT5nuY3VG_zl32FnZ-wEe2S4ihVsuV8WmL4ubNjaQsOV69C-8WESgxELEjyARQyhXhrrRSBvauXWqdg4DYYgVqPpcT_teVMjnMr7ttjTBflrlUVOj9ejwJEvjWmW8rQOMH-kUXWKHltsND67IEODt1ba82qajjaF0i4CvTLIXYBTugw-OBeyJ7tWD4LYHovOL6D_NFnkyk9hpsSHV0CQ
+++ __ADM_TOKEN_TS=2
++ cid=console-setup
+++ get_client_token nonrtric-realm console-setup
+++ __check_admin_token
+++ __diff=0
+++ '[' 0 -gt 15 ']'
+++ __realm=nonrtric-realm
+++ __client=console-setup
++++ __get_client_id nonrtric-realm console-setup
+++++ curl -s -X GET '192.168.128.104:31784/admin/realms/nonrtric-realm/clients?clientId=console-setup' -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2OTAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiYTAxYmVmMWUtZTQzYy00M2ZjLWJkYzAtMTE3YmRiNGExYWJlIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiI4OGE1MTFlZi0xZjNkLTQ4NDYtODMxMC0zNjJmOWRjYzQwOTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiODhhNTExZWYtMWYzZC00ODQ2LTgzMTAtMzYyZjlkY2M0MDk1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.TSdsM_jCKUpDk5x62lnJJr_dif9lJa4mW0xjilZ8fiiNs97eFy4ahyVr8UwSmi2ZqxK8Ka-sd9NS9kDckeIP-U1Fq9iT-7qPwuyi1DQM_VhqyjnJ50UDEkNqh9fCtaQTk1rT5nuY3VG_zl32FnZ-wEe2S4ihVsuV8WmL4ubNjaQsOV69C-8WESgxELEjyARQyhXhrrRSBvauXWqdg4DYYgVqPpcT_teVMjnMr7ttjTBflrlUVOj9ejwJEvjWmW8rQOMH-kUXWKHltsND67IEODt1ba82qajjaF0i4CvTLIXYBTugw-OBeyJ7tWD4LYHovOL6D_NFnkyk9hpsSHV0CQ'
++++ __client_data='[{"id":"076bc96f-494c-4cd5-8cb0-723591fe620d","clientId":"console-setup","rootUrl":"https://example.com/example/","adminUrl":"https://example.com/example/","surrogateAuthRequired":false,"enabled":true,"alwaysDisplayInConsole":false,"clientAuthenticatorType":"client-secret","secret":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD","redirectUris":[],"webOrigins":[],"notBefore":0,"bearerOnly":false,"consentRequired":false,"standardFlowEnabled":true,"implicitFlowEnabled":false,"directAccessGrantsEnabled":false,"serviceAccountsEnabled":true,"publicClient":false,"frontchannelLogout":false,"protocol":"openid-connect","attributes":{"client.secret.creation.time":"1768293439"},"authenticationFlowBindingOverrides":{},"fullScopeAllowed":true,"nodeReRegistrationTimeout":-1,"protocolMappers":[{"id":"10b88719-fb6d-4665-aa75-8a88322221d1","name":"Client Host","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientHost","id.token.claim":"true","access.token.claim":"true","claim.name":"clientHost","jsonType.label":"String"}},{"id":"21ba9206-92d7-4a33-b90a-d73681daf033","name":"Client IP Address","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientAddress","id.token.claim":"true","access.token.claim":"true","claim.name":"clientAddress","jsonType.label":"String"}},{"id":"986e9607-3ec5-43f2-9ec7-3190cd99d7d5","name":"Client ID","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientId","id.token.claim":"true","access.token.claim":"true","claim.name":"clientId","jsonType.label":"String"}}],"defaultClientScopes":["web-origins","acr","roles","profile","email"],"optionalClientScopes":["address","phone","offline_access","microprofile-jwt"],"access":{"view":true,"configure":true,"manage":true}}]'
++++ '[' 0 -ne 0 ']'
+++++ echo '[{"id":"076bc96f-494c-4cd5-8cb0-723591fe620d","clientId":"console-setup","rootUrl":"https://example.com/example/","adminUrl":"https://example.com/example/","surrogateAuthRequired":false,"enabled":true,"alwaysDisplayInConsole":false,"clientAuthenticatorType":"client-secret","secret":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD","redirectUris":[],"webOrigins":[],"notBefore":0,"bearerOnly":false,"consentRequired":false,"standardFlowEnabled":true,"implicitFlowEnabled":false,"directAccessGrantsEnabled":false,"serviceAccountsEnabled":true,"publicClient":false,"frontchannelLogout":false,"protocol":"openid-connect","attributes":{"client.secret.creation.time":"1768293439"},"authenticationFlowBindingOverrides":{},"fullScopeAllowed":true,"nodeReRegistrationTimeout":-1,"protocolMappers":[{"id":"10b88719-fb6d-4665-aa75-8a88322221d1","name":"Client' 'Host","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientHost","id.token.claim":"true","access.token.claim":"true","claim.name":"clientHost","jsonType.label":"String"}},{"id":"21ba9206-92d7-4a33-b90a-d73681daf033","name":"Client' IP 'Address","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientAddress","id.token.claim":"true","access.token.claim":"true","claim.name":"clientAddress","jsonType.label":"String"}},{"id":"986e9607-3ec5-43f2-9ec7-3190cd99d7d5","name":"Client' 'ID","protocol":"openid-connect","protocolMapper":"oidc-usersessionmodel-note-mapper","consentRequired":false,"config":{"user.session.note":"clientId","id.token.claim":"true","access.token.claim":"true","claim.name":"clientId","jsonType.label":"String"}}],"defaultClientScopes":["web-origins","acr","roles","profile","email"],"optionalClientScopes":["address","phone","offline_access","microprofile-jwt"],"access":{"view":true,"configure":true,"manage":true}}]'
+++++ jq -r '.[0].id'
++++ __client_id=076bc96f-494c-4cd5-8cb0-723591fe620d
++++ echo 076bc96f-494c-4cd5-8cb0-723591fe620d
++++ return 0
+++ __client_id=076bc96f-494c-4cd5-8cb0-723591fe620d
+++ '[' 0 -ne 0 ']'
++++ curl -s -f -X GET 192.168.128.104:31784/admin/realms/nonrtric-realm/clients/076bc96f-494c-4cd5-8cb0-723591fe620d/client-secret -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICItd2dRbzNueE81TmpHOTZPODIxazhGd29MU1BoUGlpX1JacElpbjJ0OXpJIn0.eyJleHAiOjE3NjgyOTM2OTAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiYTAxYmVmMWUtZTQzYy00M2ZjLWJkYzAtMTE3YmRiNGExYWJlIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL21hc3RlciIsInN1YiI6IjIzODhlOGFkLTM0MmEtNDJhZC1iYjZlLWRhMmYxOThkYjU5ZSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImFkbWluLWNsaSIsInNlc3Npb25fc3RhdGUiOiI4OGE1MTFlZi0xZjNkLTQ4NDYtODMxMC0zNjJmOWRjYzQwOTUiLCJhY3IiOiIxIiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwic2lkIjoiODhhNTExZWYtMWYzZC00ODQ2LTgzMTAtMzYyZjlkY2M0MDk1IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhZG1pbiJ9.TSdsM_jCKUpDk5x62lnJJr_dif9lJa4mW0xjilZ8fiiNs97eFy4ahyVr8UwSmi2ZqxK8Ka-sd9NS9kDckeIP-U1Fq9iT-7qPwuyi1DQM_VhqyjnJ50UDEkNqh9fCtaQTk1rT5nuY3VG_zl32FnZ-wEe2S4ihVsuV8WmL4ubNjaQsOV69C-8WESgxELEjyARQyhXhrrRSBvauXWqdg4DYYgVqPpcT_teVMjnMr7ttjTBflrlUVOj9ejwJEvjWmW8rQOMH-kUXWKHltsND67IEODt1ba82qajjaF0i4CvTLIXYBTugw-OBeyJ7tWD4LYHovOL6D_NFnkyk9hpsSHV0CQ'
+++ __client_secret='{"type":"secret","value":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD"}'
+++ '[' 0 -ne 0 ']'
++++ echo '{"type":"secret","value":"G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD"}'
++++ jq -r .value
+++ __client_secret=G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD
++++ curl -s -f -X POST 192.168.128.104:31784/realms/nonrtric-realm/protocol/openid-connect/token -H Content-Type:application/x-www-form-urlencoded -d client_id=console-setup -d client_secret=G7JZ7RN7potf5XC6MnbLO5x1OrRJsVeD -d grant_type=client_credentials
+++ __TMP_TOKEN='{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg","expires_in":300,"refresh_expires_in":0,"token_type":"Bearer","not-before-policy":0,"scope":"profile email"}'
+++ '[' 0 -ne 0 ']'
+++ echo '{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg","expires_in":300,"refresh_expires_in":0,"token_type":"Bearer","not-before-policy":0,"scope":"profile' 'email"}'
+++ jq -r .access_token
+++ return 0
++ TOKEN=eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg
++ JOB='{"info_type_id": "json-file-data-from-filestore",
+     "job_owner": "console",
+     "status_notification_uri": "http://callback.ridenext-nonrt:80/post",
+     "job_definition": {
+        "deliveryInfo": {
+           "topic": "pmreports",
+           "bootStrapServers": "kafka-1-kafka-bootstrap.ridenext-nonrt:9092"
+        },
+        "filter": {
+           "sourceNames": [],
+           "measurementTypes": []
+        }
+     }}'
++ echo 'Creating ICS job for kafka bridge: rapp-topic -> pmreports'
+Creating ICS job for kafka bridge: rapp-topic -> pmreports
++ echo '{"info_type_id":' '"json-file-data-from-filestore",' '"job_owner":' '"console",' '"status_notification_uri":' '"http://callback.ridenext-nonrt:80/post",' '"job_definition":' '{' '"deliveryInfo":' '{' '"topic":' '"pmreports",' '"bootStrapServers":' '"kafka-1-kafka-bootstrap.ridenext-nonrt:9092"' '},' '"filter":' '{' '"sourceNames":' '[],' '"measurementTypes":' '[]' '}' '}}'
++ create_ics_job kp-kafka-bridge 0 eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg
+++ kubectl get svc -n ridenext-nonrt informationservice --output 'jsonpath={.spec.ports[?(@.name=="http")].nodePort}'
++ ICS_PROXY_PORT=31823
++ echo 'NodePort to ics: 31823'
+NodePort to ics: 31823
++ JOB='{"info_type_id": "json-file-data-from-filestore", "job_owner": "console", "status_notification_uri": "http://callback.ridenext-nonrt:80/post", "job_definition": { "deliveryInfo": { "topic": "pmreports", "bootStrapServers": "kafka-1-kafka-bootstrap.ridenext-nonrt:9092" }, "filter": { "sourceNames": [], "measurementTypes": [] } }}'
++ echo '{"info_type_id":' '"json-file-data-from-filestore",' '"job_owner":' '"console",' '"status_notification_uri":' '"http://callback.ridenext-nonrt:80/post",' '"job_definition":' '{' '"deliveryInfo":' '{' '"topic":' '"pmreports",' '"bootStrapServers":' '"kafka-1-kafka-bootstrap.ridenext-nonrt:9092"' '},' '"filter":' '{' '"sourceNames":' '[],' '"measurementTypes":' '[]' '}' '}}'
+{"info_type_id": "json-file-data-from-filestore", "job_owner": "console", "status_notification_uri": "http://callback.ridenext-nonrt:80/post", "job_definition": { "deliveryInfo": { "topic": "pmreports", "bootStrapServers": "kafka-1-kafka-bootstrap.ridenext-nonrt:9092" }, "filter": { "sourceNames": [], "measurementTypes": [] } }}
++ retcode=1
++ echo 'Creating job-kp-kafka-bridge-0'
+Creating job-kp-kafka-bridge-0
++ '[' 1 -ne 0 ']'
++ '[' -z eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg ']'
++ __bearer='Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg'
+++ curl -s -X PUT -w '%{http_code}' -H accept:application/json -H Content-Type:application/json http://192.168.128.104:31823/data-consumer/v1/info-jobs/job-kp-kafka-bridge-0 --data-binary @.job.json -H 'Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJKVU5IQ1pGRkJrdWNCSWQyUWlfMjZFbzBOejVMUFRPQVczMDBYRHdXTDBNIn0.eyJleHAiOjE3NjgyOTM5MzAsImlhdCI6MTc2ODI5MzYzMCwianRpIjoiY2Y2YTljM2UtYTRmOC00OWQ3LWIzYmUtMzFiNjFjNjJmZTlmIiwiaXNzIjoiaHR0cDovL2tleWNsb2FrLnJpZGVuZXh0LW5vbnJ0OjgwODAvcmVhbG1zL25vbnJ0cmljLXJlYWxtIiwiYXVkIjoiYWNjb3VudCIsInN1YiI6IjgyZjExNmRmLWE4NWUtNGZjMS1hZWM2LTc0NmM2ZmFhMGQ3MSIsInR5cCI6IkJlYXJlciIsImF6cCI6ImNvbnNvbGUtc2V0dXAiLCJhY3IiOiIxIiwicmVhbG1fYWNjZXNzIjp7InJvbGVzIjpbImRlZmF1bHQtcm9sZXMtbm9ucnRyaWMtcmVhbG0iLCJvZmZsaW5lX2FjY2VzcyIsInVtYV9hdXRob3JpemF0aW9uIl19LCJyZXNvdXJjZV9hY2Nlc3MiOnsiYWNjb3VudCI6eyJyb2xlcyI6WyJtYW5hZ2UtYWNjb3VudCIsIm1hbmFnZS1hY2NvdW50LWxpbmtzIiwidmlldy1wcm9maWxlIl19fSwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiY2xpZW50SG9zdCI6IjEwLjI0NC4wLjc0IiwiZW1haWxfdmVyaWZpZWQiOmZhbHNlLCJjbGllbnRJZCI6ImNvbnNvbGUtc2V0dXAiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJzZXJ2aWNlLWFjY291bnQtY29uc29sZS1zZXR1cCIsImNsaWVudEFkZHJlc3MiOiIxMC4yNDQuMC43NCJ9.ejKiDbUAlB6sIx2EPEbOsa5NEDOtxnVO307aODHTx1beB3-x3wpEoHrsD7j0Pf7i8UzsBplaBGG-8cgHlyeE3OHRjvw43u-8JigPgx9RDobSQxcAzRbqkF55wMayHCknD6IC7AS9VnwYxw-A4ww0v5zT2NzkLRFLbMFkWaY-rRIq7P8W0adqIhTip_kavtfc7rGxJIj-zCL9f7-QVFCR6dTf_HTDaOU90h2JRg-iHSTBoSA46ZBk7dqs-bPtjW0PqqrLsvUjkQCaPJsSLOvYELgV4RVJNl-P002Lt7NOWqOcNtVeMGD_yHXusgOfPDuw-fJGx6_0BC4zgKEgaWSCqg'
++ STAT=201
++ retcode=0
++ echo 'curl return code: 0'
+curl return code: 0
++ '[' 0 -eq 0 ']'
++ status=201
++ echo 'http status code: 201'
+http status code: 201
++ '[' 201 == 200 ']'
++ '[' 201 == 201 ']'
++ echo 'Job created ok'
+Job created ok
++ sleep 1
++ '[' 0 -ne 0 ']'
++ echo 'PM Kafka bridge job installation completed'
+PM Kafka bridge job installation completed
+[0;32m✓ scripts/install-pm-kafka-bridge.sh completed successfully[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/fix-oauth-authentication.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/fix-oauth-authentication.sh...[0m
+Applying OAuth authentication fixes for PM components
+Upgrading main nrt-pm Helm release to apply OAuth configuration changes...
+Release "nrt-pm" has been upgraded. Happy Helming!
+NAME: nrt-pm
+LAST DEPLOYED: Tue Jan 13 14:10:32 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 2
+TEST SUITE: None
+OAuth authentication fixes applied successfully!
+Components should now use PLAINTEXT authentication on port 9092
+[0;32m✓ scripts/fix-oauth-authentication.sh completed successfully[0m
+
+[0;32m=========================================================================[0m
+[0;32mAll RANPM installation scripts executed successfully![0m
+[0;32m=========================================================================[0m
+
+[1;33mNext steps:[0m
+1. Verify all pods are running: [0;32mkubectl get pods -n ridenext-nonrt[0m
+2. Check Kafka topics: [0;32mkubectl exec -n ridenext-nonrt kafka-client -- kafka-topics --list --bootstrap-server kafka-1-kafka-bootstrap.ridenext-nonrt:9092[0m
+3. Deploy Energy Saving rApp: See energy_saving_rapp_deployment.md
+
+[1;33mLog file saved to: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/LOGS/install-ranpm-Logs//install-ranpm-20260113-140652.log[0m

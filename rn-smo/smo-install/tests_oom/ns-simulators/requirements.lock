@@ -1,0 +1,12 @@
+dependencies:
+- name: actn-simulator
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: core-nssmf-simulator
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: ran-nssmf-simulator
+  repository: http://localhost:18080
+  version: 1.0.0
+digest: sha256:e01fb8e5e1cfd174dbeb9c7c34004fc4d3ce4aa1081607153e10130b5a030324
+generated: "2025-11-18T12:51:36.852720883+05:30"

@@ -1,0 +1,39 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: cassandra
+  repository: http://localhost:18080
+  version: 16.0.0
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+- name: aai-babel
+  repository: file://components/aai-babel
+  version: 15.0.2
+- name: aai-graphadmin
+  repository: file://components/aai-graphadmin
+  version: 16.0.0
+- name: aai-modelloader
+  repository: file://components/aai-modelloader
+  version: 15.0.5
+- name: aai-resources
+  repository: file://components/aai-resources
+  version: 16.0.0
+- name: aai-schema-service
+  repository: file://components/aai-schema-service
+  version: 16.0.0
+- name: aai-sparky-be
+  repository: file://components/aai-sparky-be
+  version: 16.0.0
+- name: aai-traversal
+  repository: file://components/aai-traversal
+  version: 16.0.0
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:3c4b6709ca4b3b52ad2a1c055746950bf8bdb5e25dee77e6c61ab72cd2b28ac0
+generated: "2025-11-18T11:34:17.374693461+05:30"

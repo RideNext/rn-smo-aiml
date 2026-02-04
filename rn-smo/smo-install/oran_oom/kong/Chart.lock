@@ -1,0 +1,6 @@
+dependencies:
+- name: kong
+  repository: https://nexus3.o-ran-sc.org/repository/helm-konghq/
+  version: 2.38.0
+digest: sha256:2ef9ddc1f09bde81d83e2d2b2d5b9769b6973a4b72e76ea73387e49fdc83592f
+generated: "2025-11-18T12:44:29.824192567+05:30"

@@ -1,0 +1,9 @@
+dependencies:
+- name: common
+  repository: file://../common
+  version: 13.2.19
+- name: cmpv2Config
+  repository: file://../cmpv2Config
+  version: 13.0.0
+digest: sha256:8c06f2ac341e1e10afd5b0c5b4d2625ec1135094876c43942f3b452f4d167810
+generated: "2025-11-18T11:19:45.295904088+05:30"

@@ -1,0 +1,200 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sdnr.fullname" . }}
+  labels:
+    {{- include "sdnr.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "sdnr.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sdnr.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+            {{- range .Values.service.additionalPorts }}
+            - name: {{ .name }}
+              containerPort: {{ .port }}
+              protocol: TCP
+            {{- end }}
+          env:
+            - name: ENABLE_ODL_CLUSTER
+              value: "{{ .Values.config.enableOdlCluster }}"
+            - name: ENABLE_OAUTH
+              value: "{{ .Values.config.enableOauth }}"
+            - name: ODL_CERT_DIR
+              value: "{{ .Values.config.odlCertDir }}"
+            - name: ODL_ADMIN_PASSWORD
+              value: "{{ .Values.config.adminPassword }}"
+            - name: SDNC_CONFIG_DIR
+              value: "/opt/onap/ccsdk/data/properties"
+            - name: SDNC_REPLICAS
+              value: "0"
+            - name: CCSDK_REPLICAS
+              value: "0"
+            - name: DOMAIN
+              value: ""
+            - name: SDNRWT
+              value: "{{ .Values.config.sdnrwt }}"
+            - name: SDNRONLY
+              value: "{{ .Values.config.sdnronly }}"
+            - name: SDNRINIT
+              value: "{{ .Values.config.sdnrinit }}"
+            - name: SDNRDM
+              value: "{{ .Values.config.sdnrdm }}"
+            - name: SDNRDBURL
+              value: "{{ .Values.config.sdnrdburl }}"
+            - name: SDNR_NETCONF_CALLHOME_ENABLED
+              value: "{{ .Values.config.sdnrNetconfCallhomeEnabled }}"
+            - name: A1_ADAPTER_NORTHBOUND
+              value: "{{ .Values.config.a1AdapterNorthbound }}"
+            - name: SDNRUSERNAME
+              value: "{{ .Values.config.sdnrUsername }}"
+            - name: SDNRPASSWORD
+              value: "{{ .Values.config.sdnrPassword }}"
+            - name: JAVA_OPTS
+              value: "{{ .Values.javaOpts }}"
+            - name: IDENTITY_PROVIDER_URL
+              value: "{{ .Values.config.identityProviderUrl }}"
+            - name: SDNC_WEB_URL
+              value: "{{ .Values.config.sdncWebUrl }}"
+            - name: SDNR_VES_COLLECTOR_ENABLED
+              value: "{{ .Values.config.vesCollectorEnabled }}"
+            - name: SDNR_VES_COLLECTOR_TLS_ENABLED
+              value: "{{ .Values.config.vesCollectorTlsEnabled }}"
+            - name: SDNR_VES_COLLECTOR_TRUST_ALL_CERTS
+              value: "{{ .Values.config.vesCollectorTrustAllCerts }}"
+            - name: SDNR_VES_COLLECTOR_IP
+              value: "{{ .Values.config.vesCollectorIp }}"
+            - name: SDNR_VES_COLLECTOR_PORT
+              value: "{{ .Values.config.vesCollectorPort }}"
+            - name: SDNR_VES_COLLECTOR_VERSION
+              value: "{{ .Values.config.vesCollectorVersion }}"
+            - name: SDNR_VES_COLLECTOR_REPORTING_ENTITY_NAME
+              value: "{{ .Values.config.vesCollectorReportingEntityName }}"
+            - name: SDNR_VES_COLLECTOR_EVENTLOG_MSG_DETAIL
+              value: "{{ .Values.config.vesCollectorEventlogMsgDetail }}"
+            - name: SDNR_VES_COLLECTOR_USERNAME
+              value: "{{ .Values.config.vesCollectorUsername }}"
+            - name: SDNR_VES_COLLECTOR_PASSWORD
+              value: "{{ .Values.config.vesCollectorPassword }}"
+            - name: SDNR_WEBSOCKET_PORT
+              value: "{{ .Values.config.websocketPort }}"
+            - name: SDNR_URL
+              value: "http://{{ include "sdnr.fullname" . }}:{{ .Values.service.port }}"
+            - name: CONFIG_FILE_PATH
+              value: "{{ .Values.config.configFilePath }}"
+            - name: JDEBUG
+              value: "{{ .Values.config.jdebug }}"
+            - name: SYSTEM_NAME
+              value: "{{ .Values.config.systemName }}"
+            - name: SYSTEM_ID
+              value: "{{ .Values.config.systemId }}"
+            - name: VES_HEARTBEAT_SCHEDULE_TIMER
+              value: "{{ .Values.config.vesHeartbeatScheduleTimer }}"
+            - name: VES_HB_MISSED_COUNT
+              value: "{{ .Values.config.vesHbMissedCount }}"
+            - name: NMS_KAFKA_IP
+              value: "{{ .Values.config.nmsKafkaIp }}"
+            - name: NMS_KAFKA_PORT
+              value: "{{ .Values.config.nmsKafkaPort }}"
+          volumeMounts:
+            {{- if .Values.volumes.oauth.enabled }}
+            - name: oauth-config
+              mountPath: /opt/opendaylight/etc/oauth-provider.config.json
+              subPath: oauth-provider.config.json
+            {{- end }}
+            {{- if .Values.volumes.deviceManager.enabled }}
+            - name: devicemanager-config
+              mountPath: /opt/opendaylight/etc/devicemanager.properties
+              subPath: devicemanager.properties
+            {{- end }}
+            {{- if .Values.volumes.mountpoint.enabled }}
+            - name: mountpoint-config
+              mountPath: /opt/opendaylight/etc/mountpoint-registrar.properties
+              subPath: mountpoint-registrar.properties
+            {{- end }}
+            {{- if .Values.volumes.logging.enabled }}
+            - name: logging-config
+              mountPath: /opt/opendaylight/etc/org.ops4j.pax.logging.cfg
+              subPath: org.ops4j.pax.logging.cfg
+            {{- end }}
+            {{- if .Values.volumes.certificates.enabled }}
+            - name: certs-config
+              mountPath: {{ .Values.config.odlCertDir }}/certs.properties
+              subPath: certs.properties
+            - name: keys0
+              mountPath: {{ .Values.config.odlCertDir }}/keys0.zip
+              subPath: keys0.zip
+            - name: keys1
+              mountPath: {{ .Values.config.odlCertDir }}/keys1.zip
+              subPath: keys1.zip
+            {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- if .Values.volumes.oauth.enabled }}
+        - name: oauth-config
+          configMap:
+            name: {{ include "sdnr.fullname" . }}-oauth-config
+        {{- end }}
+        {{- if .Values.volumes.deviceManager.enabled }}
+        - name: devicemanager-config
+          configMap:
+            name: {{ include "sdnr.fullname" . }}-devicemanager-config
+        {{- end }}
+        {{- if .Values.volumes.mountpoint.enabled }}
+        - name: mountpoint-config
+          configMap:
+            name: {{ include "sdnr.fullname" . }}-mountpoint-config
+        {{- end }}
+        {{- if .Values.volumes.logging.enabled }}
+        - name: logging-config
+          configMap:
+            name: {{ include "sdnr.fullname" . }}-logging-config
+        {{- end }}
+        {{- if .Values.volumes.certificates.enabled }}
+        - name: certs-config
+          configMap:
+            name: {{ include "sdnr.fullname" . }}-certs-config
+        - name: keys0
+          secret:
+            secretName: {{ include "sdnr.fullname" . }}-keys0
+        - name: keys1
+          secret:
+            secretName: {{ include "sdnr.fullname" . }}-keys1
+        {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

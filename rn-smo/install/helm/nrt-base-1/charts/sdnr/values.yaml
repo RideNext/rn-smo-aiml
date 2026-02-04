@@ -1,0 +1,108 @@
+# Default values for sdnr
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# General configuration
+fullnameOverride: "sdnr"
+nameOverride: ""
+
+# Image configuration
+image:
+  repository: localhost:5000/sdnr
+  pullPolicy: IfNotPresent
+  tag: "2.0"
+
+# Service configurations
+service:
+  type: NodePort
+  port: 8181
+  nodePort: 31769
+  additionalPorts:
+    - name: callhome
+      port: 6666
+    - name: jmx
+      port: 1090
+    - name: debug
+      port: 4335
+    - name: karaf
+      port: 8101
+
+# Configuration parameters
+config:
+  enableOdlCluster: false
+  enableOauth: true
+  odlCertDir: /opt/opendaylight/current/certs
+  adminPassword: "admin"
+  sdnrwt: true
+  sdnronly: true
+  sdnrinit: true
+  sdnrdm: true
+  sdnrdburl: http://persistence.nonrtric:9200
+  sdnrNetconfCallhomeEnabled: true
+  a1AdapterNorthbound: false
+  sdnrUsername: admin
+  sdnrPassword: admin
+  identityProviderUrl: https://identity.nonrtric:8463
+  sdncWebUrl: https://sdnc-web.nonrtric:8453
+  vesCollectorEnabled: true
+  vesCollectorTlsEnabled: true
+  vesCollectorTrustAllCerts: true
+  vesCollectorIp: ves-collector.nonrtric
+  vesCollectorPort: 8080
+  vesCollectorVersion: v7
+  vesCollectorReportingEntityName: "ONAP SDN-R"
+  vesCollectorEventlogMsgDetail: LONG
+  vesCollectorUsername: sample1
+  vesCollectorPassword: sample1
+  websocketPort: 8182
+  configFilePath: /opt/opendaylight/etc
+  systemName: tej-ems
+  systemId: 123
+  jdebug: true
+  vesHeartbeatScheduleTimer: 11
+  vesHbMissedCount: 4
+  nmsKafkaIp: kafka-1-kafka-bootstrap.nonrtric
+  nmsKafkaPort: 9092
+
+# Java options
+javaOpts: "-Xms256m -Xmx4g"
+
+# Resource configuration
+resources:
+  limits:
+    memory: 4Gi
+    cpu: 2.25
+  requests:
+    memory: 2Gi
+    cpu: 1
+
+# Volumes configuration
+volumes:
+  oauth:
+    enabled: true
+  deviceManager:
+    enabled: true
+  mountpoint:
+    enabled: true
+  logging:
+    enabled: true
+  certificates:
+    enabled: true
+
+# Pod annotations
+podAnnotations: {}
+
+# Pod security context
+podSecurityContext: {}
+
+# Security context
+securityContext: {}
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity
+affinity: {}

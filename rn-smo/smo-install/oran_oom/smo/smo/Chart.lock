@@ -1,0 +1,12 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: ranpm
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: topology-exposure-inventory
+  repository: http://localhost:18080
+  version: 1.0.0
+digest: sha256:3e7010fda63ef58781163533a6c943f9e90256304586555187b0218b522555c7
+generated: "2025-11-18T12:49:45.456878214+05:30"

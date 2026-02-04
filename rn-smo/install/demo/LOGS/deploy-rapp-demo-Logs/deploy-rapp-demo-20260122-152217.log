@@ -1,0 +1,308 @@
+=========================================================================
+Deploying Energy Saving rApp Demo
+Log file: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/scripts/../LOGS/deploy-rapp-demo-Logs//deploy-rapp-demo-20260122-152217.log
+=========================================================================
+✓ ridenext-nonrt namespace exists
+✓ Kafka cluster found
+✓ Policy Management Service found
+
+Deploying Energy Saving rApp & Visualization...
+
+1. Deploying Simple Energy rApp...
+Building simple-energy-rapp...
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 301B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 ...
+
+#3 [auth] library/python:pull token for registry-1.docker.io
+#3 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 DONE 2.2s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 2B done
+#4 DONE 0.0s
+
+#5 [1/4] FROM docker.io/library/python:3.10-slim@sha256:f5d029fe39146b08200bcc73595795ac19b85997ad0e5001a02c7c32e8769efa
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 11.87kB done
+#6 DONE 0.0s
+
+#7 [3/4] RUN pip install --no-cache-dir     kafka-python==2.0.2     requests==2.31.0
+#7 CACHED
+
+#8 [2/4] WORKDIR /app
+#8 CACHED
+
+#9 [4/4] COPY energy_saving_rapp.py /app/
+#9 CACHED
+
+#10 exporting to image
+#10 exporting layers done
+#10 writing image sha256:e8c8cc76f5f9b6e00680eb0d7e396a24dbeb02d40d0673550d651124e4e667a0 done
+#10 naming to localhost:5000/simple-energy-rapp:latest done
+#10 DONE 0.0s
+Pushing simple-energy-rapp...
+The push refers to repository [localhost:5000/simple-energy-rapp]
+4e5a4a425920: Preparing
+3381f585ba7c: Preparing
+5cf1f395a6a4: Preparing
+d8fe6d8e990b: Preparing
+278a5c9353c3: Preparing
+41a08778b9fd: Preparing
+e50a58335e13: Preparing
+e50a58335e13: Waiting
+41a08778b9fd: Waiting
+4e5a4a425920: Layer already exists
+3381f585ba7c: Layer already exists
+d8fe6d8e990b: Layer already exists
+278a5c9353c3: Layer already exists
+5cf1f395a6a4: Layer already exists
+41a08778b9fd: Layer already exists
+e50a58335e13: Layer already exists
+latest: digest: sha256:4197847a8425c17b3524c829624cfe2bc2af4284f16b9973fdeca62e1f931e51 size: 1785
+✓ Simple Energy rApp deployed
+
+1.5. Deploying PM Data Producer...
+Building pm-data-producer...
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.producer
+#1 transferring dockerfile: 278B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/4] FROM docker.io/library/python:3.10-slim@sha256:f5d029fe39146b08200bcc73595795ac19b85997ad0e5001a02c7c32e8769efa
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 6.40kB done
+#5 DONE 0.0s
+
+#6 [2/4] WORKDIR /app
+#6 CACHED
+
+#7 [3/4] RUN pip install --no-cache-dir kafka-python==2.0.2
+#7 CACHED
+
+#8 [4/4] COPY pm_data_producer.py /app/
+#8 CACHED
+
+#9 exporting to image
+#9 exporting layers done
+#9 writing image sha256:da79fbb93b96e85be77b0322aeb59e56c8726d3e9ba875850008e28ef825b4de done
+#9 naming to localhost:5000/pm-data-producer:latest done
+#9 DONE 0.0s
+Pushing pm-data-producer...
+The push refers to repository [localhost:5000/pm-data-producer]
+10b2d6d4708a: Preparing
+97c1b4ff1291: Preparing
+5cf1f395a6a4: Preparing
+d8fe6d8e990b: Preparing
+278a5c9353c3: Preparing
+41a08778b9fd: Preparing
+e50a58335e13: Preparing
+41a08778b9fd: Waiting
+e50a58335e13: Waiting
+278a5c9353c3: Layer already exists
+d8fe6d8e990b: Layer already exists
+10b2d6d4708a: Layer already exists
+97c1b4ff1291: Layer already exists
+5cf1f395a6a4: Layer already exists
+41a08778b9fd: Layer already exists
+e50a58335e13: Layer already exists
+latest: digest: sha256:13e820df4a3f4bbd0fab06847d94f939458d7872be7c52b954ce8c686331da54 size: 1785
+✓ PM Data Producer deployed
+
+2. Deploying Visualization Backend...
+Building visualization-backend...
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 229B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.10-slim
+#2 DONE 0.4s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/library/python:3.10-slim@sha256:f5d029fe39146b08200bcc73595795ac19b85997ad0e5001a02c7c32e8769efa
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 297B done
+#5 DONE 0.0s
+
+#6 [2/5] WORKDIR /app
+#6 CACHED
+
+#7 [3/5] COPY requirements.txt .
+#7 CACHED
+
+#8 [4/5] RUN pip install --no-cache-dir -r requirements.txt
+#8 CACHED
+
+#9 [5/5] COPY . .
+#9 CACHED
+
+#10 exporting to image
+#10 exporting layers done
+#10 writing image sha256:448373603aeeba445394d75b5db7c7cb971cad1262a8c0d3e7f0ea8e6957d628 done
+#10 naming to localhost:5000/visualization-backend:latest done
+#10 DONE 0.0s
+Pushing visualization-backend...
+The push refers to repository [localhost:5000/visualization-backend]
+8ccf72fc6882: Preparing
+0815495bdc51: Preparing
+29d1fa2028c6: Preparing
+5cf1f395a6a4: Preparing
+d8fe6d8e990b: Preparing
+278a5c9353c3: Preparing
+41a08778b9fd: Preparing
+e50a58335e13: Preparing
+41a08778b9fd: Waiting
+e50a58335e13: Waiting
+278a5c9353c3: Waiting
+0815495bdc51: Layer already exists
+5cf1f395a6a4: Layer already exists
+d8fe6d8e990b: Layer already exists
+29d1fa2028c6: Layer already exists
+8ccf72fc6882: Layer already exists
+278a5c9353c3: Layer already exists
+41a08778b9fd: Layer already exists
+e50a58335e13: Layer already exists
+latest: digest: sha256:e002fd13272ca9b605107642f293fc4cdae8c838eab1321d20dc6dbbbdaa23e2 size: 1992
+✓ Visualization Backend deployed
+
+3. Deploying Visualization Frontend...
+Building visualization-frontend...
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 311B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/nginx:alpine
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:18-alpine
+#3 ...
+
+#4 [auth] library/node:pull token for registry-1.docker.io
+#4 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:18-alpine
+#3 DONE 2.1s
+
+#5 [internal] load .dockerignore
+#5 transferring context: 2B done
+#5 DONE 0.0s
+
+#6 [build 1/6] FROM docker.io/library/node:18-alpine@sha256:8d6421d663b4c28fd3ebc498332f249011d118945588d0a35cb9bc4b8ca09d9e
+#6 DONE 0.0s
+
+#7 [stage-1 1/3] FROM docker.io/library/nginx:alpine
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 963.96kB 0.7s done
+#8 DONE 0.7s
+
+#9 [build 6/6] RUN npm run build
+#9 CACHED
+
+#10 [build 3/6] COPY package*.json ./
+#10 CACHED
+
+#11 [build 4/6] RUN npm install
+#11 CACHED
+
+#12 [stage-1 2/3] COPY --from=build /app/dist /usr/share/nginx/html
+#12 CACHED
+
+#13 [build 2/6] WORKDIR /app
+#13 CACHED
+
+#14 [build 5/6] COPY . .
+#14 CACHED
+
+#15 [stage-1 3/3] COPY nginx.conf /etc/nginx/conf.d/default.conf
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 writing image sha256:f4492a6c1a88bca19b15d4a8fbe728a04755ff2438772302aca23b5b138017a9 0.0s done
+#16 naming to localhost:5000/visualization-frontend:latest done
+#16 DONE 0.0s
+Pushing visualization-frontend...
+The push refers to repository [localhost:5000/visualization-frontend]
+4fa9171a3031: Preparing
+427d1d184273: Preparing
+25906c27b84d: Preparing
+99ea4bde418d: Preparing
+3297b9628ff3: Preparing
+b74d92be8225: Preparing
+2c79d5d895bb: Preparing
+2660a7d4b906: Preparing
+50b58ca2a3f5: Preparing
+256f393e029f: Preparing
+b74d92be8225: Waiting
+2c79d5d895bb: Waiting
+2660a7d4b906: Waiting
+50b58ca2a3f5: Waiting
+256f393e029f: Waiting
+427d1d184273: Layer already exists
+4fa9171a3031: Layer already exists
+3297b9628ff3: Layer already exists
+25906c27b84d: Layer already exists
+99ea4bde418d: Layer already exists
+b74d92be8225: Layer already exists
+2660a7d4b906: Layer already exists
+2c79d5d895bb: Layer already exists
+50b58ca2a3f5: Layer already exists
+256f393e029f: Layer already exists
+latest: digest: sha256:8862472735a84d7c4e71b726e50b0d600ea92eb7205a8eb0f3edf65b6797e32f size: 2406
+✓ Visualization Frontend deployed
+
+Waiting for pods to be ready...
+
+=========================================================================
+Energy Saving rApp Demo Deployment Completed Successfully!
+=========================================================================
+Deployed components:
+  ✓ Simple Energy rApp
+  ✓ Visualization Backend
+  ✓ Visualization Frontend
+
+Next steps to run the demo:
+1. Open 4 terminals.
+2. In Terminal 1 (Backend Tunnel):
+   kubectl port-forward svc/visualization-backend 8000:8000 -n ridenext-nonrt
+3. In Terminal 2 (Frontend Tunnel):
+   kubectl port-forward svc/visualization-frontend 5173:80 -n ridenext-nonrt
+4. In Terminal 3 (A1PMS Tunnel):
+   kubectl port-forward svc/policymanagementservice 31850:8081 -n ridenext-nonrt
+5. In Terminal 4 (Policy Creation):
+   cd /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/scripts
+   ./create-energy-policies.sh
+
+6. Access the UI at http://localhost:5173
+
+Log file: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/scripts/../LOGS/deploy-rapp-demo-Logs//deploy-rapp-demo-20260122-152217.log

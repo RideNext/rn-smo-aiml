@@ -1,0 +1,45 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: certManagerCertificate
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: logConfiguration
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: network-name-gen
+  repository: http://localhost:18080
+  version: 16.0.0
+- name: dgbuilder
+  repository: http://localhost:18080
+  version: 15.1.0
+- name: sdnc-prom
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: mariadb-galera
+  repository: http://localhost:18080
+  version: 16.0.0
+- name: elasticsearch
+  repository: http://localhost:18080
+  version: 13.0.1
+- name: ueb-listener
+  repository: http://localhost:18080
+  version: 15.1.0
+- name: sdnc-ansible-server
+  repository: http://localhost:18080
+  version: 15.1.0
+- name: sdnc-web
+  repository: http://localhost:18080
+  version: 15.1.0
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+digest: sha256:188138d1f126edb968e21d60d4ed2a628b1b209b4f895bbe1c27b040c0dc62e3
+generated: "2025-11-18T12:18:47.709901221+05:30"

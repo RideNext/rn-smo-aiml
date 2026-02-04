@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: cassandra
+  repository: http://localhost:18080
+  version: 16.0.0
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+digest: sha256:21bd4b0a069a82ba744c7fe263aaf1120c49a2df41271aa1866d8e18d2d23718
+generated: "2025-11-18T12:10:39.184994402+05:30"

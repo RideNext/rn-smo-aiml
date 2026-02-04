@@ -1,0 +1,12 @@
+{
+  "types": [
+    {
+      "id": "json-file-data-from-filestore",
+      "kafkaInputTopic": "json-file-ready-kp",
+      "inputJobType": "job-kp-influx-json-0",
+      "inputJobDefinition": {
+        "kafkaOutputTopic": "pmreports"
+      }
+    }
+  ]
+}

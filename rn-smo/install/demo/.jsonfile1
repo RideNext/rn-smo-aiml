@@ -1,0 +1,7 @@
+{
+   "clientId":"$__client_name",
+   "publicClient": false,
+   "serviceAccountsEnabled": true,
+   "rootUrl":"https://example.com/example/",
+   "adminUrl":"https://example.com/example/"
+}

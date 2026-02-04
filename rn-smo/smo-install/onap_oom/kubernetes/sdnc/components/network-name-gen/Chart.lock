@@ -1,0 +1,15 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: mariadb-init
+  repository: http://localhost:18080
+  version: 16.0.0
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+digest: sha256:3e7c3618cd082eef2f79b4501b4d1201d8fc65b1e86f320018e9311513b77852
+generated: "2025-11-18T12:15:32.182028583+05:30"

@@ -1,0 +1,30 @@
+dependencies:
+- name: smo-common
+  repository: http://localhost:18080
+  version: 1.0.0
+- name: influxdb2
+  repository: file://influxdb2
+  version: 0.1.0
+- name: kafka-client
+  repository: file://kafka-client
+  version: 0.1.0
+- name: keycloak
+  repository: file://keycloak
+  version: 0.1.0
+- name: keycloak-proxy
+  repository: file://keycloak-proxy
+  version: 0.1.0
+- name: minio
+  repository: file://minio
+  version: 0.1.0
+- name: opa
+  repository: file://opa
+  version: 0.1.0
+- name: opa-rule-db
+  repository: file://opa-rule-db
+  version: 0.1.0
+- name: redpanda-console
+  repository: file://redpanda-console
+  version: 0.1.0
+digest: sha256:1c65af13e5d6a8d81eeda4546f9c4f241a3ef2b81a88c4e4f98ad1610edf5dba
+generated: "2025-11-18T12:48:32.66546285+05:30"

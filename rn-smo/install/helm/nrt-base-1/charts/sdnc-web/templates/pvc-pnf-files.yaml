@@ -1,0 +1,15 @@
+{{- if .Values.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "sdnc-web.fullname" . }}-pnf-files
+  labels:
+    {{- include "sdnc-web.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.global.storageClass | default "nfs-client" }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.pnfFiles.size | default "1Gi" }}
+{{- end }}

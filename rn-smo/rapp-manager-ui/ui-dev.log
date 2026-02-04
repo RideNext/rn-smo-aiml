@@ -1,0 +1,20 @@
+
+> rapp-manager-ui@1.0.0 dev
+> vite --host
+
+Port 3000 is in use, trying another one...
+Port 3001 is in use, trying another one...
+
+  VITE v4.5.14  ready in 371 ms
+
+  ➜  Local:   http://localhost:3002/
+  ➜  Network: http://192.168.128.104:3002/
+  ➜  Network: http://10.45.0.1:3002/
+  ➜  Network: http://10.4.0.1:3002/
+  ➜  Network: http://10.244.0.0:3002/
+  ➜  Network: http://10.244.0.1:3002/
+  ➜  Network: http://10.244.77.128:3002/
+  ➜  Network: http://172.18.0.1:3002/
+  ➜  Network: http://172.20.0.1:3002/
+  ➜  Network: http://172.17.0.1:3002/
+  ➜  Network: http://172.21.0.1:3002/

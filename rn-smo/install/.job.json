@@ -1,0 +1,1 @@
+{"info_type_id": "json-file-data-from-filestore", "job_owner": "console", "status_notification_uri": "http://callback.ridenext-nonrt:80/post", "job_definition": { "deliveryInfo": { "topic": "pmreports", "bootStrapServers": "kafka-1-kafka-bootstrap.ridenext-nonrt:9092" }, "filter": { "sourceNames": [], "measurementTypes": [] } }}

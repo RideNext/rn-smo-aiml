@@ -1,0 +1,12 @@
+dependencies:
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: serviceAccount
+  repository: http://localhost:18080
+  version: 13.0.2
+- name: readinessCheck
+  repository: http://localhost:18080
+  version: 13.1.4
+digest: sha256:a64f606cf773a7afa9444785ec902c3d9f7772fccbd910b943f66549d7d9ff9f
+generated: "2025-11-18T12:13:51.698705873+05:30"

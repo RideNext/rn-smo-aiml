@@ -1,0 +1,155 @@
+[0;32m=========================================================================[0m
+[0;32mStarting RANPM Installation[0m
+[0;32mLog file: /home/bluefox/Manish/performance/rn-smo_cleanup/install/demo/LOGS/install-ranpm-Logs//install-ranpm-20260113-134221.log[0m
+[0;32m=========================================================================[0m
+
+[1;33mChecking prerequisites...[0m
+[0;32m✓ Found: kubectl[0m
+[0;32m✓ Found: helm[0m
+[0;32m✓ Found: envsubst[0m
+[0;32m✓ Found: jq[0m
+
+[0;32m=========================================================================[0m
+[0;32mProcessing: scripts/install-nrt.sh[0m
+[0;32m=========================================================================[0m
+[1;33mRunning scripts/install-nrt.sh...[0m
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Kubernetes control plane host: 192.168.128.104
+Host obtained from current kubectl context
+Kubernetes version : v1.32.2
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Checking requirements
+ Checking if istio is installed
+  OK
+ Checking if jq is installed
+  OK
+ Checking if envsubst is installed
+  OK
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Restarting istiod, workaround to refresh jwks cache
+deployment.apps/istiod restarted
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+##### Installing chart: nrt-base-0
+NAME: nrt-base-0
+LAST DEPLOYED: Tue Jan 13 13:42:22 2026
+NAMESPACE: ridenext-nonrt
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+Cluster ip: 192.168.128.104
+Nodeport to keycloak proxy: 31784
+Get admin token
+Admin token: eyJhbGciOi...
+Creating realms: nonrtric-realm
+ Attempt to create realm: nonrtric-realm
+  OK, create_realms
+Attempt to create clients console-setup for realm: nonrtric-realm
+ Creating client: console-setup
+ OK, create_clients
+Attempt to generate secret for clients console-setup in realm nonrtric-realm
+  Client id for client console-setup in realm nonrtric-realm: c12f517a-c09f-4e62-a3dc-6d7581adc401
+  Creating secret
+   Client secret for client console-setup in realm nonrtric-realm: NBxzzKwlsgQGWUUAhpx8kT2ylK3FW50r
+   OK, generate_client_secrets
+
+Get admin token
+Admin token: eyJhbGciOi...
+##### Installing charts: strimzi and nrt-base-1
+Error: looks like "https://strimzi.io/charts/" is not a valid chart repository or cannot be reached: Get "https://strimzi.io/charts/index.yaml": dial tcp [2406:da1a:103:e602::1f5]:443: connect: network is unreachable
+Installing Strimzi Kafka operator version: 0.39.0
+Error: INSTALLATION FAILED: repo strimzi not found
+Error: INSTALLATION FAILED: unable to build kubernetes objects from release manifest: resource mapping not found for name: "kafka-1" namespace: "ridenext-nonrt" from "": no matches for kind "Kafka" in version "kafka.strimzi.io/v1beta2"
+ensure CRDs are installed first
+Waiting for influx db - there may be error messages while trying...
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found
+Error from server (NotFound): pods "influxdb2-0" not found

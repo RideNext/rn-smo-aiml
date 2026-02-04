@@ -1,0 +1,9 @@
+dependencies:
+- name: jenkins
+  repository: https://charts.jenkins.io
+  version: 3.12.2
+- name: oran-tests
+  repository: http://localhost:18080
+  version: 1.0.0
+digest: sha256:5fe940c6388a6e08717426887d863352675090db755d18fc8cdec40fcdd27fd5
+generated: "2025-11-18T12:50:31.407211857+05:30"

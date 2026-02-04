@@ -1,0 +1,122 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ran-o1-sim-du
+  namespace: ran-o1-sim
+  labels:
+    app: ran-o1-sim-du
+spec:
+  volumes:
+  - name: config-json
+    configMap:
+      name: ntsim-odu-config-json
+  - name: running-xml
+    configMap:
+      name: ntsim-odu-hello-world-running-xml
+  - name: operational-xml
+    configMap:
+      name: ntsim-odu-hello-world-operational-xml
+  - name: pm-xml
+    configMap:
+      name: ntsim-odu-pm-xml
+  - name: data-volume
+    emptyDir: {}
+  initContainers:
+  - name: create-directories
+    image: busybox:1.35
+    command: ['sh', '-c']
+    args:
+    - |
+      echo "Creating directory structure..."
+      mkdir -p /shared/pm_xml
+      echo "Directory /shared/pm_xml created successfully"
+      echo "Copying pm.xml file to pm_xml directory..."
+      cp /pm-source/pm.xml /shared/pm_xml/pm.xml
+      echo "pm.xml file copied successfully"
+      ls -la /shared/pm_xml/
+    volumeMounts:
+    - name: data-volume
+      mountPath: /shared
+    - name: pm-xml
+      mountPath: /pm-source
+  containers:
+  - name: nts-ng-o-ran-du
+    #image: localhost:5000/du-simulator:649
+    image: ridenext/du-simulator:sslsim20
+    imagePullPolicy: IfNotPresent
+    env:
+    - name: IPv6_ENABLED
+      value: "false"
+    - name: SSH_CONNECTIONS
+      value: "1"
+    - name: TLS_CONNECTIONS
+      value: "0"
+    - name: NTS_NF_MOUNT_POINT_ADDRESSING_METHOD
+      value: "docker-mapping"
+    - name: SDN_CONTROLLER_PROTOCOL
+      value: "http"
+    - name: SDN_CONTROLLER_IP
+      value: "sdnr.ridenext-nonrt"
+    - name: SDN_CONTROLLER_PORT
+      value: "8181"
+    - name: SDN_CONTROLLER_CALLHOME_IP
+      value: "sdnr.ridenext-nonrt"
+    - name: SDN_CONTROLLER_CALLHOME_PORT
+      value: "6666"
+    - name: SDN_CONTROLLER_USERNAME
+      value: "admin"
+    - name: SDN_CONTROLLER_PASSWORD
+      value: "Kp8bJ4SXszM0WXlhak3eHlcse2gAw84vaoGGmJvUy2U"
+    - name: VES_COMMON_HEADER_VERSION
+      value: "7.2.1"
+    - name: VES_ENDPOINT_PROTOCOL
+      value: http
+    - name: VES_ENDPOINT_IP
+      value: ves-collector.ridenext-nonrt
+    - name: VES_ENDPOINT_PORT
+      value: "8080"
+    - name: VES_ENDPOINT_PATH
+      value: "/eventListener/v7"
+    - name: VES_ENDPOINT_AUTH_METHOD
+      value: "basic-auth"
+    - name: CURL_CONNECT_TIMEOUT
+      value: "10"
+    - name: CURL_OPERATION_TIMEOUT
+      value: "30"
+    - name: VES_ENDPOINT_USERNAME
+      value: "sample1"
+    - name: VES_ENDPOINT_PASSWORD
+      value: "sample1"
+    - name: VES_ENDPOINT_CERTIFICATE_VALIDATION
+      value: "false"
+    - name: NTS_NF_STANDALONE_START_FEATURES
+      value: datastore-populate ves-heartbeat ves-file-ready ves-pnf-registration ves-o1-pnf-registration web-cut-through sw_mgnt
+    - name: NTS_VES_FILE_NOTIFY_DURATION
+      value: "30"
+    - name: NTS_VES_FILE_NOTIFY_FEATURE
+      value: "YES"
+    - name: NTS_VES_FILE_DIR
+      value: "/opt/dev/deploy/data/pm_xml/"
+    - name: NTS_VES_FTP_FILE_PATH
+      value: "sftp://netconf:netconf!@ran-o1-sim-du.ran-o1-sim.svc.cluster.local:22/opt/dev/deploy/data/pm_xml/"
+    - name: NTS_SW_MGNT_FEATURE
+      value: "YES"
+    - name: NTS_SW_DWLOAD_STATUS_EVNT
+      value: "POS"
+    - name: NTS_SW_INSTALL_STATUS_EVNT
+      value: "POS"
+    - name: NTS_SW_ACTIVE_STATUS_EVNT
+      value: "POS"
+    volumeMounts:
+    - name: data-volume
+      mountPath: /opt/dev/deploy/data/pm_xml
+      subPath: pm_xml
+    - name: config-json
+      mountPath: /opt/dev/ntsim-ng/config/config.json
+      subPath: config.json
+    - name: running-xml
+      mountPath: /opt/dev/deploy/data/o-ran-sc-du-hello-world-running.xml
+      subPath: o-ran-sc-du-hello-world-running.xml
+    - name: operational-xml
+      mountPath: /opt/dev/deploy/data/o-ran-sc-du-hello-world-operational.xml
+      subPath: o-ran-sc-du-hello-world-operational.xml

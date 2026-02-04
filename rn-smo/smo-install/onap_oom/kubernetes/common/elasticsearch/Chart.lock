@@ -1,0 +1,18 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: master
+  repository: file://components/master
+  version: 13.0.1
+- name: data
+  repository: file://components/data
+  version: 13.0.1
+- name: curator
+  repository: file://components/curator
+  version: 13.0.1
+digest: sha256:5c0f0ebcdefe054e7b36ea9ed612c9bf70c557bcef5caa021f2e4cd5daaded72
+generated: "2025-11-18T11:21:36.368930556+05:30"

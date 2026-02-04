@@ -1,0 +1,15 @@
+dependencies:
+- name: common
+  repository: http://localhost:18080
+  version: 13.2.19
+- name: repositoryGenerator
+  repository: http://localhost:18080
+  version: 13.0.3
+- name: certManagerCertificate
+  repository: http://localhost:18080
+  version: 13.0.0
+- name: cmpv2Config
+  repository: http://localhost:18080
+  version: 13.0.0
+digest: sha256:a7c897782a626c8c60d71ec69a6d4f2c67211c988c334fc50d7d726686da24e7
+generated: "2025-11-18T11:55:20.752450179+05:30"

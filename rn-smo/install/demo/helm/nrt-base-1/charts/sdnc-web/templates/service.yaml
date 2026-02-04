@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sdnc-web.fullname" . }}
+  labels:
+    {{- include "sdnc-web.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    {{- if eq .Values.config.webProtocol "HTTPS" }}
+    - port: {{ .Values.service.httpsPort | default "8443" }}
+      targetPort: 8443
+      protocol: TCP
+      name: https
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.httpsNodePort }}
+      nodePort: {{ .Values.service.httpsNodePort }}
+      {{- end }}
+    {{- else }}
+    - port: {{ .Values.service.port }}
+      targetPort: 8000
+      protocol: TCP
+      name: http
+      {{- if and (eq .Values.service.type "NodePort") .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
+    {{- end }}
+    - port: 3005
+      targetPort: 3005
+      protocol: TCP
+      name: node-server
+  selector:
+    {{- include "sdnc-web.selectorLabels" . | nindent 4 }}

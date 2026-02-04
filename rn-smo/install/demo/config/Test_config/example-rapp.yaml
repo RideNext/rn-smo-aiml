@@ -1,0 +1,8 @@
+name: example-rapp
+version: 1.0.0
+description: A test rApp for local catalog
+url: https://example.com/rapp
+type: APP
+icon: ""
+maintainer: bluefox
+

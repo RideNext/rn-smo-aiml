@@ -1,0 +1,6 @@
+dependencies:
+- name: nonrtric-common
+  repository: http://localhost:18080
+  version: 2.0.0
+digest: sha256:b7bb770b184421916d96edc91a0bcdc7fa8039803d3c2210ef0fc48a4744be41
+generated: "2025-11-18T12:43:27.720425053+05:30"

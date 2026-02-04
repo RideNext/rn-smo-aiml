@@ -1,0 +1,218 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sdnc-web.fullname" . }}
+  labels:
+    {{- include "sdnc-web.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "sdnc-web.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sdnc-web.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if and .Values.volumes.certificates.enabled (eq .Values.config.webProtocol "HTTPS") }}
+      initContainers:
+        - name: cert-generator
+          image: alpine:3.18
+          command:
+            - /bin/sh
+            - -c
+            - |
+              if [ ! -f {{ .Values.config.sslCertDir }}/{{ .Values.config.sslCertificate }} ]; then
+                echo "Generating self-signed certificate..."
+                apk add --no-cache openssl
+                mkdir -p {{ .Values.config.sslCertDir }}
+                openssl req -x509 -newkey rsa:4096 -keyout {{ .Values.config.sslCertDir }}/{{ .Values.config.sslCertificateKey }} \
+                  -out {{ .Values.config.sslCertDir }}/{{ .Values.config.sslCertificate }} -days 365 -nodes \
+                  -subj "/C=US/ST=CA/L=San Francisco/O=ONAP/CN=sdnc-web"
+                chmod 644 {{ .Values.config.sslCertDir }}/*
+              else
+                echo "Certificate already exists"
+              fi
+          volumeMounts:
+            {{- if .Values.volumes.certificates.enabled }}
+            - name: sdnc-web-certs
+              mountPath: {{ .Values.config.sslCertDir }}
+            {{- end }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.volumes.configMap.enabled }}
+          command: ["/bin/bash"]
+          args: ["/startup/startup.sh"]
+          {{- end }}
+          ports:
+            - name: api
+              containerPort: 3005
+              protocol: TCP
+            {{- if eq .Values.config.webProtocol "HTTPS" }}
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            {{- end }}
+          env:
+            - name: ENABLE_OAUTH
+              value: "{{ .Values.config.enableOauth }}"
+            - name: WEBPROTOCOL
+              value: "{{ .Values.config.webProtocol }}"
+            - name: SDNRHOST
+              value: "{{ .Values.config.sdnrHost }}"
+            - name: WEBPORT
+              value: "{{ .Values.service.port }}"
+            - name: SDNRPROTOCOL
+              value: "{{ .Values.config.sdnrProtocol }}"
+            - name: SDNRPORT
+              value: "{{ .Values.config.sdnrPort }}"
+            - name: SDNRWSPORT
+              value: "{{ .Values.config.sdnrWsPort }}"
+            - name: SSL_CERT_DIR
+              value: "{{ .Values.config.sslCertDir }}"
+            - name: SSL_CERTIFICATE
+              value: "{{ .Values.config.sslCertificate }}"
+            - name: SSL_CERTIFICATE_KEY
+              value: "{{ .Values.config.sslCertificateKey }}"
+            - name: REACT_APP_EMS_TIME_ZONE
+              value: "{{ .Values.config.emsTimeZone }}"
+            - name: REACT_APP_ARRAY_SIZE
+              value: "{{ .Values.config.arraySize }}"
+            - name: REACT_APP_ADMIN_USERNAME
+              value: "{{ .Values.config.adminUsername }}"
+            - name: REACT_APP_WAIT_TIME
+              value: "{{ .Values.config.waitTime }}"
+            - name: NMS_KAFKA_IP
+              value: "{{ .Values.config.nmsKafkaIp }}"
+            - name: NMS_KAFKA_PORT
+              value: "{{ .Values.config.nmsKafkaPort }}"
+          volumeMounts:
+            {{- if .Values.volumes.docker.enabled }}
+            - name: docker-socket
+              mountPath: {{ .Values.volumes.docker.socket }}
+            - name: docker-binary
+              mountPath: {{ .Values.volumes.docker.binary }}
+            {{- end }}
+            {{- if .Values.volumes.configMap.enabled }}
+            - name: software-version-details
+              mountPath: {{ .Values.persistence.softwareVersionDetails.mountPath }}
+              subPath: {{ .Values.persistence.softwareVersionDetails.subPath }}
+            - name: docker-stats
+              mountPath: {{ .Values.persistence.dockerStats.mountPath }}
+              subPath: {{ .Values.persistence.dockerStats.subPath }}
+            - name: startup-script
+              mountPath: /startup
+            {{- end }}
+            {{- if .Values.volumes.certificates.enabled }}
+            - name: sdnc-web-certs
+              mountPath: {{ .Values.persistence.certs.mountPath }}
+            {{- end }}
+            {{- if .Values.nginx.enabled }}
+            - name: nginx-config
+              mountPath: /opt/bitnami/nginx/conf/server_blocks/sdnc-web.conf
+              subPath: sdnc-web.conf
+            - name: location-rules
+              mountPath: /opt/bitnami/nginx/conf/server_blocks/location.rules
+              subPath: location.rules
+            {{- end }}
+            - name: pnf-files
+              mountPath: {{ .Values.persistence.pnfFiles.mountPath }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: {{ if eq .Values.config.webProtocol "HTTPS" }}https{{ else }}http{{ end }}
+              scheme: {{ if eq .Values.config.webProtocol "HTTPS" }}HTTPS{{ else }}HTTP{{ end }}
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ if eq .Values.config.webProtocol "HTTPS" }}https{{ else }}http{{ end }}
+              scheme: {{ if eq .Values.config.webProtocol "HTTPS" }}HTTPS{{ else }}HTTP{{ end }}
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ if eq .Values.config.webProtocol "HTTPS" }}https{{ else }}http{{ end }}
+              scheme: {{ if eq .Values.config.webProtocol "HTTPS" }}HTTPS{{ else }}HTTP{{ end }}
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        {{- if .Values.volumes.docker.enabled }}
+        - name: docker-socket
+          hostPath:
+            path: {{ .Values.volumes.docker.socket }}
+        - name: docker-binary
+          hostPath:
+            path: {{ .Values.volumes.docker.binary }}
+        {{- end }}
+        {{- if .Values.volumes.configMap.enabled }}
+        - name: software-version-details
+          configMap:
+            name: {{ include "sdnc-web.fullname" . }}-config
+        - name: docker-stats
+          configMap:
+            name: {{ include "sdnc-web.fullname" . }}-scripts
+            defaultMode: 0755
+        - name: startup-script
+          configMap:
+            name: {{ include "sdnc-web.fullname" . }}-startup
+            defaultMode: 0755
+        {{- end }}
+        {{- if .Values.volumes.certificates.enabled }}
+        {{- if eq .Values.config.webProtocol "HTTPS" }}
+        - name: sdnc-web-certs
+          emptyDir: {}
+        {{- else }}
+        - name: sdnc-web-certs
+          secret:
+            secretName: {{ include "sdnc-web.fullname" . }}-certs
+        {{- end }}
+        {{- end }}
+        {{- if .Values.nginx.enabled }}
+        - name: nginx-config
+          configMap:
+            name: {{ include "sdnc-web.fullname" . }}-nginx-config
+        - name: location-rules
+          configMap:
+            name: {{ include "sdnc-web.fullname" . }}-location-rules
+        {{- end }}
+        - name: pnf-files
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ include "sdnc-web.fullname" . }}-pnf-files
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,9 @@
+dependencies:
+- name: nonrtric-common
+  repository: http://localhost:18080
+  version: 2.0.0
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 15.5.27
+digest: sha256:9c9fd282d02b5cabd4aaaf5569b78a101375cd7c38f4dbf9b2e50912a45b256c
+generated: "2025-11-19T18:35:56.39598872+05:30"
