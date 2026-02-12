@@ -18,10 +18,10 @@ kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: {{ include "common.name.capifcore" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   generation: 1
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.capifcore" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.capifcore" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -31,12 +31,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.capifcore" . }}
+      app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.capifcore" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.capifcore" . }}
+        app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.capifcore" . }}
         release: {{ .Release.Name }}
     spec:
       hostname: {{ include "common.name.capifcore" . }}

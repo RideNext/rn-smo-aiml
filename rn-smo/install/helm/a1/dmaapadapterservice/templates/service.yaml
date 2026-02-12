@@ -18,9 +18,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ include "common.name.dmaapadapterservice" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.dmaapadapterservice" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.dmaapadapterservice" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -37,6 +37,6 @@ spec:
       targetPort: {{ .Values.dmaapadapterservice.service.targetPort2 }}
       protocol: TCP
   selector:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.dmaapadapterservice" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.dmaapadapterservice" . }}
     release: {{ .Release.Name }}
   type: ClusterIP

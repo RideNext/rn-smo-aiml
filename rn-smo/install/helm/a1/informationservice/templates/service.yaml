@@ -18,9 +18,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ include "common.name.informationservice" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.informationservice" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.informationservice" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -37,6 +37,6 @@ spec:
       targetPort: {{ .Values.informationservice.service.targetPort2 }}
       protocol: TCP
   selector:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.informationservice" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.informationservice" . }}
     release: {{ .Release.Name }}
   type: ClusterIP

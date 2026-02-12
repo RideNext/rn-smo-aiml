@@ -19,9 +19,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ include "common.name.rappmanager" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.rappmanager" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.rappmanager" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -32,6 +32,6 @@ spec:
       targetPort: {{ .Values.rappmanager.service.targetPort1 }}
       protocol: TCP
   selector:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.rappmanager" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.rappmanager" . }}
     release: {{ .Release.Name }}
   type: ClusterIP

@@ -18,9 +18,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ .Values.a1simulator.name }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -35,7 +35,7 @@ spec:
       targetPort: {{ .Values.a1simulator.service.targetPort2 }}
       protocol: TCP
   selector:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
     release: {{ .Release.Name }}
   type: ClusterIP
   clusterIP: None

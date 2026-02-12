@@ -18,10 +18,10 @@ kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: {{ .Values.a1simulator.oscVersion.name }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   generation: 1
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -31,13 +31,13 @@ spec:
   replicas: {{ .Values.a1simulator.oscVersion.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+      app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
       release: {{ .Release.Name }}
   serviceName: {{ .Values.a1simulator.name }}
   template:
     metadata:
       labels:
-        app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+        app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
         release: {{ .Release.Name }}
     spec:
       hostname: {{ include "common.name.a1simulator" . }}
@@ -71,10 +71,10 @@ kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: {{ .Values.a1simulator.stdVersion.name }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   generation: 1
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -84,13 +84,13 @@ spec:
   replicas: {{ .Values.a1simulator.stdVersion.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+      app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
       release: {{ .Release.Name }}
   serviceName: {{ .Values.a1simulator.name }}
   template:
     metadata:
       labels:
-        app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+        app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
         release: {{ .Release.Name }}
     spec:
       hostname: {{ include "common.name.a1simulator" . }}
@@ -123,10 +123,10 @@ kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: {{ .Values.a1simulator.stdVersion2.name }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   generation: 1
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -136,13 +136,13 @@ spec:
   replicas: {{ .Values.a1simulator.stdVersion2.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+      app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
       release: {{ .Release.Name }}
   serviceName: {{ .Values.a1simulator.name }}
   template:
     metadata:
       labels:
-        app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.a1simulator" . }}
+        app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.a1simulator" . }}
         release: {{ .Release.Name }}
     spec:
       hostname: {{ include "common.name.a1simulator" . }}

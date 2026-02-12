@@ -18,9 +18,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ include "common.name.controlpanel" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.controlpanel" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.controlpanel" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -40,5 +40,5 @@ spec:
       nodePort: {{ .Values.controlpanel.service.externalPort2 }}
       protocol: TCP
   selector:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.controlpanel" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.controlpanel" . }}
     release: {{ .Release.Name }}

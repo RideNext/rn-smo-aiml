@@ -17,9 +17,9 @@ kind: Service
 apiVersion: v1
 metadata:
   name: {{ include "common.name.servicemanager" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.servicemanager" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.servicemanager" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -35,6 +35,6 @@ spec:
       protocol: TCP
     {{- end }}
   selector:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.servicemanager" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.servicemanager" . }}
     release: {{ .Release.Name }}
   type: {{ .Values.servicemanager.service.type }}

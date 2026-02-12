@@ -21,7 +21,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "common.name.policymanagementservice" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
 
 spec:
   ingressClassName: {{ include "common.ingressClassName" . }}

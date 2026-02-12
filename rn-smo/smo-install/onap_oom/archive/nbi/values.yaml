@@ -35,7 +35,8 @@ global:
   # Additions for MongoDB****************************
   # If dockerHubRepository is changes the following entry needs
   # to be changed as well
-  imageRegistry: docker.io
+  #imageRegistry: docker.io
+  imageRegistry: my-registry.local:5000
   imagePullSecrets:
     - '{{ include "common.names.namespace" . }}-docker-registry-key'
   # *************************************************
@@ -75,7 +76,7 @@ config:
   openStackVNFTenantId: 31047205ce114b60833b23e400d6a535
   db:
     userName: &dbuser rene
-    # userPassword: password
+    userPassword: password
     # userCredentialsExternalSecret: some-secret
 
 mariadb-galera:
@@ -107,11 +108,8 @@ mariadb-init:
     nameOverride: nbi-config
 
 mongodb:
-  nameOverride: nbi-mongo
   config:
     dbName: &mongoDBName ServiceOrderDB
-  auth:
-    enabled: false
     databases:
     - *mongoDBName
     usernames:

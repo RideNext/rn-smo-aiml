@@ -19,9 +19,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ include "common.name.dmeparticipant" . }}-configmap-config
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.dmeparticipant" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.dmeparticipant" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}

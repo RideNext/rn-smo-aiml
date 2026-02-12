@@ -18,10 +18,10 @@ kind: StatefulSet
 apiVersion: apps/v1
 metadata:
   name: {{ include "common.name.dmaapadapterservice" . }}
-  namespace: {{ include "common.namespace.nonrtric" . }}
+  namespace: {{ include "common.namespace.ridenext-nonrt" . }}
   generation: 1
   labels:
-    app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.dmaapadapterservice" . }}
+    app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.dmaapadapterservice" . }}
     chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
@@ -32,12 +32,12 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.dmaapadapterservice" . }}
+      app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.dmaapadapterservice" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "common.namespace.nonrtric" . }}-{{ include "common.name.dmaapadapterservice" . }}
+        app: {{ include "common.namespace.ridenext-nonrt" . }}-{{ include "common.name.dmaapadapterservice" . }}
         release: {{ .Release.Name }}
     spec:
       hostname: {{ include "common.name.dmaapadapterservice" . }}
